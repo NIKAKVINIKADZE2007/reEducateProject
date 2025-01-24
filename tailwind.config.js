@@ -7,6 +7,10 @@ export default {
         tablet: '376px',
         desktop: '769px',
       },
+      colors: {
+        purpleDark: '#7C5DFA',
+        mainDark: '#0C0E16',
+      },
     },
   },
   plugins: [],

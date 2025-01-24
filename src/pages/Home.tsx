@@ -1,7 +1,10 @@
-import React from "react";
+import NewInvoice from '../components/newInvoice';
 
-const Home = () => {
-  return <div>Home</div>;
+type Props = {
+  showNewInvoice: boolean;
+};
+const Home: React.FC<Props> = ({ showNewInvoice }) => {
+  return <div>{showNewInvoice && <NewInvoice />}</div>;
 };
 
 export default Home;
