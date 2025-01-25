@@ -10,6 +10,10 @@ export default {
       colors: {
         purpleDark: '#7C5DFA',
         mainDark: '#0C0E16',
+        lightPurple: '#9277FF',
+        blueGray: '#7E88C3',
+        lightGray: '#DFE3FA',
+        darkGray: '#888EB0',
       },
     },
   },
