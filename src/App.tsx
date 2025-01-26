@@ -23,7 +23,7 @@ export default function App() {
         />
       </header>
 
-      <div>
+      <div className="">
         <Invoices filterStatus={filterStatus} />
       </div>
     </div>
