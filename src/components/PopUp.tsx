@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UseFormRegister } from 'react-hook-form';
+import { Invoice } from '../../invoices/InvoiceJson';
 
 type ItemType = {
   name: string;
@@ -10,6 +11,7 @@ type ItemType = {
 
 export default function PopUp({
   register,
+  invoice,
 }: {
   register: UseFormRegister<{
     items?:
@@ -36,6 +38,7 @@ export default function PopUp({
     paymentTerms: string;
     description: string;
   }>;
+  invoice?: Invoice;
 }) {
   const [items, setItems] = useState<ItemType[]>([]);
   const [showNewItem, setShowNewItem] = useState<boolean>(false);
@@ -45,6 +48,18 @@ export default function PopUp({
     price: '',
     total: '0',
   });
+
+  useEffect(() => {
+    if (invoice) {
+      const newItem = {
+        name: invoice.itemName,
+        quantity: `${invoice.quantity}`,
+        price: `${invoice.price}`,
+        total: `${invoice.price * invoice.quantity}`,
+      };
+      setItems((prev) => [...prev, newItem]);
+    }
+  }, [invoice]);
 
   const handleButtonClick = () => {
     if (showNewItem) {

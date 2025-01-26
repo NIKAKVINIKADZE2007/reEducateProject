@@ -2,25 +2,33 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InvoiceFormData, invoiceSchema } from '../validations/Invoice';
 import PopUp from './PopUp';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import leftArrow from '../assets/icon-arrow-left.svg';
 import invoices, { Invoice } from '../../invoices/InvoiceJson';
 
 export default function InvoiceForm({
   setShowNewInvoice,
   setInvoices,
+  invoice,
 }: {
   setShowNewInvoice: React.Dispatch<React.SetStateAction<boolean>>;
   setInvoices: React.Dispatch<React.SetStateAction<Invoice[]>>;
+  invoice?: Invoice;
 }) {
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<InvoiceFormData>({
     resolver: yupResolver(invoiceSchema),
+    defaultValues: invoice || {},
   });
+
+  console.log(invoice);
+
+  // logics
 
   const getMonthAbbreviation = (date: string): string => {
     const monthAbbreviations: string[] = [
@@ -50,36 +58,52 @@ export default function InvoiceForm({
 
   const options = ['Net 1 Day', 'Net 7 Day', 'Net 14 Day', 'Net 30 Day'];
 
-  const onSubmit = (data: InvoiceFormData) => {
+  const onSubmit = (data: InvoiceFormData, status: string) => {
     const { items } = data;
-    if (!items) return console.log('items not defiend');
+    if (!items) return console.log('Items not defined');
+
     const renamedItems = items.map((item) => {
       const { itemName, quantity, price } = item;
-
       return {
-        itemName: itemName,
-        quantity: quantity,
+        itemName,
+        quantity,
         price,
       };
     });
+
     delete data.items;
 
-    const newInvoice = { ...data, id: invoices.length + 1, ...renamedItems[0] };
-
-    console.log(newInvoice);
-    invoices.push({
-      ...newInvoice,
-      status: 'Pending',
+    const updatedInvoice = {
+      ...data,
+      id: invoice?.id || `${invoices.length + 1}`,
+      ...renamedItems[0],
+      status: status as 'Pending' | 'Draft',
       leftArrow: leftArrow,
-    });
+    };
 
-    setInvoices((prev) => [...prev, newInvoice]);
+    if (invoice) {
+      setInvoices((prevInvoices) =>
+        prevInvoices.map((item) =>
+          item.id === invoice.id ? { ...item, ...updatedInvoice } : item
+        )
+      );
+    } else {
+      // Otherwise, add a new invoice
+      setInvoices((prevInvoices) => [...prevInvoices, updatedInvoice]);
+    }
+
+    reset(); // Reset the form
+    setShowNewInvoice(false);
+    console.log(setShowNewInvoice);
   };
-  console.log(errors);
+
+  // design
   return (
     <form
       className='w-full absolute tablet:max-w-[719px] mx-auto'
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit((data) => {
+        onSubmit(data, 'Pending');
+      })}
     >
       <div className='flex flex-col w-full desktop:ml-[159px] max-w-[327px] tablet:max-w-[504px] tablet:mx-auto'>
         <div className='w-full'>
@@ -224,7 +248,6 @@ export default function InvoiceForm({
               <input
                 className='input'
                 onChange={(e) => {
-                  console.log(e.target.value);
                   setValue(`month`, getMonthAbbreviation(e.target.value));
                   const dates = e.target.value.split('-');
                   setValue('date', Number(dates[2]));
@@ -283,10 +306,14 @@ export default function InvoiceForm({
             )}
           </div>
         </div>
-        <PopUp register={register} />
+        <PopUp register={register} invoice={invoice} />
       </div>
       <div className='opacity-[0.1] w-full h-[64px]   mt-6 bg-gradient-to-r from-[#979797] to-[#979797]  bg-opacity-[0.02] tablet:hidden' />
-      <div className='flex items-center justify-between h-[91px] px-6 text-[15px] tablet:max-w-[504px] desktop:ml-[159px] tablet:mx-auto'>
+      <div
+        className={`flex items-center  h-[91px] px-6 text-[15px] tablet:max-w-[504px] desktop:ml-[159px] tablet:mx-auto  ${
+          invoice ? ' justify-end' : 'justify-between'
+        } `}
+      >
         <button
           type='button'
           onClick={() => setShowNewInvoice(false)}
@@ -294,8 +321,19 @@ export default function InvoiceForm({
         >
           Discard
         </button>
-        <div className='flex justify-between max-w-[236px] w-full'>
-          <button className='text-darkGray bg-[#373B53] h-[48px] max-w-[117px] w-full rounded-3xl'>
+        <div
+          className={`flex justify-between max-w-[236px]   ${
+            invoice ? ' w-[138px] ml-8' : 'w-full'
+          }`}
+        >
+          <button
+            onClick={handleSubmit((data) => {
+              onSubmit(data, 'Draft');
+            })}
+            className={`text-darkGray bg-[#373B53] h-[48px] max-w-[117px] w-full rounded-3xl ${
+              invoice ? 'hidden' : ''
+            }`}
+          >
             Save as Draft
           </button>
 
