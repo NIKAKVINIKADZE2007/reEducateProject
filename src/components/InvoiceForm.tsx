@@ -17,6 +17,7 @@ export default function InvoiceForm({
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<InvoiceFormData>({
     resolver: yupResolver(invoiceSchema),
@@ -64,18 +65,18 @@ export default function InvoiceForm({
     });
     delete data.items;
 
-    const newInvoice = { ...data, id: invoices.length + 1, ...renamedItems[0] };
-
-    console.log(newInvoice);
-    invoices.push({
-      ...newInvoice,
-      status: 'Pending',
+    const newInvoice = {
+      ...data,
+      id: `${invoices.length + 1}`,
+      ...renamedItems[0],
+      status: 'Pending' as 'Pending',
       leftArrow: leftArrow,
-    });
+    };
 
     setInvoices((prev) => [...prev, newInvoice]);
+    reset();
+    setShowNewInvoice(false);
   };
-  console.log(errors);
   return (
     <form
       className='w-full absolute tablet:max-w-[719px] mx-auto'
@@ -224,7 +225,6 @@ export default function InvoiceForm({
               <input
                 className='input'
                 onChange={(e) => {
-                  console.log(e.target.value);
                   setValue(`month`, getMonthAbbreviation(e.target.value));
                   const dates = e.target.value.split('-');
                   setValue('date', Number(dates[2]));
