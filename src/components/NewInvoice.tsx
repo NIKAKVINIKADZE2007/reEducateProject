@@ -1,8 +1,11 @@
+import { Invoice } from '../../invoices/InvoiceJson';
 import InvoiceForm from './InvoiceForm';
 
 export default function NewInvoice({
+  setInvoices,
   setShowNewInvoice,
 }: {
+  setInvoices: React.Dispatch<React.SetStateAction<Invoice[]>>;
   setShowNewInvoice: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   return (
@@ -11,7 +14,10 @@ export default function NewInvoice({
         <h1 className='text-mainDark font-bold text-[24px] tablet:mt-[59px] leading-8 mb-[22px] tablet:mb-[46px] mx-auto tablet:ml-[56px] desktop:ml-[159px]'>
           New Invoice
         </h1>
-        <InvoiceForm setShowNewInvoice={setShowNewInvoice} />
+        <InvoiceForm
+          setInvoices={setInvoices}
+          setShowNewInvoice={setShowNewInvoice}
+        />
       </div>
     </div>
   );

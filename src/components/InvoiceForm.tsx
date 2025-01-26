@@ -3,19 +3,42 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InvoiceFormData, invoiceSchema } from '../validations/Invoice';
 import PopUp from './PopUp';
 import { useState } from 'react';
+import leftArrow from '../assets/icon-arrow-left.svg';
+import invoices, { Invoice } from '../../invoices/InvoiceJson';
 
 export default function InvoiceForm({
   setShowNewInvoice,
+  setInvoices,
 }: {
   setShowNewInvoice: React.Dispatch<React.SetStateAction<boolean>>;
+  setInvoices: React.Dispatch<React.SetStateAction<Invoice[]>>;
 }) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<InvoiceFormData>({
     resolver: yupResolver(invoiceSchema),
   });
+
+  const getMonthAbbreviation = (date: string): string => {
+    const monthAbbreviations: string[] = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return monthAbbreviations[Number(date.split('-')[1])];
+  };
 
   const [selected, setSelected] = useState<string>('Net 1 Day');
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -28,10 +51,31 @@ export default function InvoiceForm({
   const options = ['Net 1 Day', 'Net 7 Day', 'Net 14 Day', 'Net 30 Day'];
 
   const onSubmit = (data: InvoiceFormData) => {
-    console.log(data);
-    console.log('submited');
-  };
+    const { items } = data;
+    if (!items) return console.log('items not defiend');
+    const renamedItems = items.map((item) => {
+      const { itemName, quantity, price } = item;
 
+      return {
+        itemName: itemName,
+        quantity: quantity,
+        price,
+      };
+    });
+    delete data.items;
+
+    const newInvoice = { ...data, id: invoices.length + 1, ...renamedItems[0] };
+
+    console.log(newInvoice);
+    invoices.push({
+      ...newInvoice,
+      status: 'Pending',
+      leftArrow: leftArrow,
+    });
+
+    setInvoices((prev) => [...prev, newInvoice]);
+  };
+  console.log(errors);
   return (
     <form
       className='w-full absolute tablet:max-w-[719px] mx-auto'
@@ -52,10 +96,10 @@ export default function InvoiceForm({
               <input
                 className='input'
                 type='text'
-                {...register('streetAddress')}
+                {...register('fromStreet')}
               />
-              {errors.streetAddress && (
-                <p className='text-red-500'>{errors.streetAddress?.message}</p>
+              {errors.fromStreet && (
+                <p className='text-red-500'>{errors.fromStreet?.message}</p>
               )}
             </div>
 
@@ -64,9 +108,13 @@ export default function InvoiceForm({
                 {/* City */}
                 <div className='w-full'>
                   <label className='text-blueGray text-[13px]'>City</label>
-                  <input className='input' type='text' {...register('city')} />
-                  {errors.city && (
-                    <p className='text-red-500'>{errors.city?.message}</p>
+                  <input
+                    className='input'
+                    type='text'
+                    {...register('fromCity')}
+                  />
+                  {errors.fromCity && (
+                    <p className='text-red-500'>{errors.fromCity?.message}</p>
                   )}
                 </div>
 
@@ -76,10 +124,12 @@ export default function InvoiceForm({
                   <input
                     className='input'
                     type='text'
-                    {...register('postCode')}
+                    {...register('fromPostCode')}
                   />
-                  {errors.postCode && (
-                    <p className='text-red-500'>{errors.postCode?.message}</p>
+                  {errors.fromPostCode && (
+                    <p className='text-red-500'>
+                      {errors.fromPostCode?.message}
+                    </p>
                   )}
                 </div>
               </div>
@@ -87,9 +137,13 @@ export default function InvoiceForm({
               {/* Country */}
               <div className='mt-[25px] tablet:ml-6'>
                 <label className='text-blueGray text-[13px]'>Country</label>
-                <input className='input' type='text' {...register('country')} />
-                {errors.country && (
-                  <p className='text-red-500'>{errors.country?.message}</p>
+                <input
+                  className='input'
+                  type='text'
+                  {...register('fromCountry')}
+                />
+                {errors.fromCountry && (
+                  <p className='text-red-500'>{errors.fromCountry?.message}</p>
                 )}
               </div>
             </div>
@@ -105,31 +159,58 @@ export default function InvoiceForm({
           {/* Client Name */}
           <div className='w-full'>
             <label className='text-blueGray text-[13px]'>Client’s Name</label>
-            <input className='input' type='text' {...register('clientName')} />
-            {errors.clientName && (
-              <p className='text-red-500'>{errors.clientName?.message}</p>
+            <input className='input' type='text' {...register('name')} />
+            {errors.name && (
+              <p className='text-red-500'>{errors.name?.message}</p>
             )}
           </div>
 
           {/* Client Email */}
           <div className='w-full mt-[25px]'>
             <label className='text-blueGray text-[13px]'>Client’s Email</label>
-            <input className='input' type='text' {...register('clientEmail')} />
-            {errors.clientEmail && (
-              <p className='text-red-500'>{errors.clientEmail?.message}</p>
+            <input className='input' type='text' {...register('email')} />
+            {errors.email && (
+              <p className='text-red-500'>{errors.email?.message}</p>
             )}
           </div>
 
           {/* Street Address */}
           <div className='w-full mt-[25px]'>
             <label className='text-blueGray text-[13px]'>Street Address</label>
-            <input
-              className='input'
-              type='text'
-              {...register('streetAddress')}
-            />
-            {errors.streetAddress && (
-              <p className='text-red-500'>{errors.streetAddress?.message}</p>
+            <input className='input' type='text' {...register('street')} />
+            {errors.street && (
+              <p className='text-red-500'>{errors.street?.message}</p>
+            )}
+          </div>
+        </div>
+
+        <div className='w-full flex-col flex tablet:flex-row'>
+          <div className='flex gap-6 mt-[25px] w-full'>
+            {/* City */}
+            <div className='w-full'>
+              <label className='text-blueGray text-[13px]'>City</label>
+              <input className='input' type='text' {...register('city')} />
+              {errors.city && (
+                <p className='text-red-500'>{errors.city?.message}</p>
+              )}
+            </div>
+
+            {/* Post Code */}
+            <div className='w-full'>
+              <label className='text-blueGray text-[13px]'>Post Code</label>
+              <input className='input' type='text' {...register('postCode')} />
+              {errors.postCode && (
+                <p className='text-red-500'>{errors.postCode?.message}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Country */}
+          <div className='mt-[25px] tablet:ml-6'>
+            <label className='text-blueGray text-[13px]'>Country</label>
+            <input className='input' type='text' {...register('country')} />
+            {errors.country && (
+              <p className='text-red-500'>{errors.country?.message}</p>
             )}
           </div>
         </div>
@@ -142,8 +223,15 @@ export default function InvoiceForm({
               <label className='text-blueGray text-[13px]'>Invoice Date</label>
               <input
                 className='input'
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setValue(`month`, getMonthAbbreviation(e.target.value));
+                  const dates = e.target.value.split('-');
+                  setValue('date', Number(dates[2]));
+                  setValue('year', Number(dates[0]));
+                  setValue('invoiceDate', new Date());
+                }}
                 type='date'
-                {...register('invoiceDate')}
               />
               {errors.invoiceDate && (
                 <p className='text-red-500'>{errors.invoiceDate?.message}</p>
@@ -167,7 +255,10 @@ export default function InvoiceForm({
                     <button
                       type='button'
                       key={option}
-                      onClick={() => handleSelection(option)}
+                      onClick={() => {
+                        handleSelection(option);
+                        setValue('paymentTerms', option);
+                      }}
                       className='block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100'
                     >
                       {option}
@@ -186,19 +277,13 @@ export default function InvoiceForm({
             <label className='text-blueGray text-[13px]'>
               Project Description
             </label>
-            <input
-              className='input'
-              type='text'
-              {...register('projectDescription')}
-            />
-            {errors.projectDescription && (
-              <p className='text-red-500'>
-                {errors.projectDescription?.message}
-              </p>
+            <input className='input' type='text' {...register('description')} />
+            {errors.description && (
+              <p className='text-red-500'>{errors.description?.message}</p>
             )}
           </div>
         </div>
-        <PopUp />
+        <PopUp register={register} />
       </div>
       <div className='opacity-[0.1] w-full h-[64px]   mt-6 bg-gradient-to-r from-[#979797] to-[#979797]  bg-opacity-[0.02] tablet:hidden' />
       <div className='flex items-center justify-between h-[91px] px-6 text-[15px] tablet:max-w-[504px] desktop:ml-[159px] tablet:mx-auto'>
@@ -214,7 +299,10 @@ export default function InvoiceForm({
             Save as Draft
           </button>
 
-          <button className='text-white bg-purpleDark h-[48px] max-w-[112px] w-full rounded-3xl'>
+          <button
+            type='submit'
+            className='text-white bg-purpleDark h-[48px] max-w-[112px] w-full rounded-3xl'
+          >
             Save & Send
           </button>
         </div>
