@@ -64,7 +64,7 @@ export default function InvoiceForm({
     });
     delete data.items;
 
-    const newInvoice = { ...data, id: '123', ...renamedItems[0] };
+    const newInvoice = { ...data, id: invoices.length + 1, ...renamedItems[0] };
 
     console.log(newInvoice);
     invoices.push({
