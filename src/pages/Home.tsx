@@ -1,3 +1,4 @@
+import SideBar from '../components/SideBar';
 import { useState, useEffect } from 'react';
 import NewInvoice from '../components/NewInvoice';
 import Header from '../components/Header';
@@ -20,6 +21,7 @@ const Home: React.FC = () => {
   return (
     <div>
       <Header setShowNewInvoice={setShowNewInvoice} />
+       <SideBar />
       {showNewInvoice && (
         <>
           <div className='fixed top-0 left-0 h-screen w-screen bg-[rgba(0,0,0,0.49)] z-10' />
@@ -31,3 +33,4 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
