@@ -1,15 +1,33 @@
-'use client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import { Invoice } from './pages/Invoice';
+import { useState, useEffect } from 'react';
+import Header from './components/Header';
+import Invoices from './components/invoicesComponent';
+import invoicesData from '../invoices/InvoiceJson';
+import SideBar from './components/SideBar';
 
 export default function App() {
+  const [filterStatus, setFilterStatus] = useState<string | null>(null);
+  const [pendingInvoicesCount, setPendingInvoicesCount] = useState<number>(0);
+
+  useEffect(() => {
+    const pendingCount = invoicesData.filter(
+      (invoice) => invoice.status === 'Pending'
+    ).length;
+    setPendingInvoicesCount(pendingCount);
+  }, []);
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/:id' element={<Invoice />} />
-      </Routes>
-    </BrowserRouter>
+    <div className='bg-white h-screen items-center'>
+      <SideBar />
+      <header className='mb-16'>
+        <Header
+          setFilterStatus={setFilterStatus}
+          pendingInvoicesCount={pendingInvoicesCount}
+        />
+      </header>
+
+      <div className=''>
+        <Invoices filterStatus={filterStatus} />
+      </div>
+    </div>
   );
 }
