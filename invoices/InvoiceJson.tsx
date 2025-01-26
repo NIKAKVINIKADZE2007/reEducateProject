@@ -1,3 +1,5 @@
+import leftAroow from "../src/assets/leftArrow.png";
+
 interface Invoice {
   id: string;
   fromStreet: string;
@@ -19,6 +21,7 @@ interface Invoice {
   quantity: number;
   price: number;
   status: "Pending" | "Paid" | "Draft";
+  leftArrow: string;
 }
 
 const invoices: Invoice[] = [
@@ -43,6 +46,7 @@ const invoices: Invoice[] = [
     quantity: 2,
     price: 200.0,
     status: "Pending",
+    leftArrow: leftAroow,
   },
   {
     id: "CD5678",
@@ -65,6 +69,7 @@ const invoices: Invoice[] = [
     quantity: 1,
     price: 300.0,
     status: "Paid",
+    leftArrow: leftAroow,
   },
   {
     id: "EF9012",
@@ -87,6 +92,7 @@ const invoices: Invoice[] = [
     quantity: 3,
     price: 450.0,
     status: "Draft",
+    leftArrow: leftAroow,
   },
   {
     id: "GH3456",
@@ -109,6 +115,7 @@ const invoices: Invoice[] = [
     quantity: 1,
     price: 500.0,
     status: "Pending",
+    leftArrow: leftAroow,
   },
   {
     id: "IJ7890",
@@ -131,6 +138,7 @@ const invoices: Invoice[] = [
     quantity: 5,
     price: 100.0,
     status: "Paid",
+    leftArrow: leftAroow,
   },
   {
     id: "KL4321",
@@ -153,6 +161,7 @@ const invoices: Invoice[] = [
     quantity: 2,
     price: 600.0,
     status: "Pending",
+    leftArrow: leftAroow,
   },
   {
     id: "MN8765",
@@ -175,6 +184,7 @@ const invoices: Invoice[] = [
     quantity: 1,
     price: 250.0,
     status: "Draft",
+    leftArrow: leftAroow,
   },
   {
     id: "OP6543",
@@ -197,6 +207,7 @@ const invoices: Invoice[] = [
     quantity: 1,
     price: 700.0,
     status: "Paid",
+    leftArrow: leftAroow,
   },
 ];
 
