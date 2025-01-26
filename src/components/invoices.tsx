@@ -1,12 +1,12 @@
 const Invoices = () => {
   return (
-    <div className="max-w-[730px] bg-white flex justify-between items-center">
+    <div className='max-w-[730px] bg-white flex justify-between items-center'>
       <p></p>
       <p></p>
       <p></p>
       <p></p>
       <p></p>
-      <Image />
+      {/* <Image /> */}
     </div>
   );
 };
