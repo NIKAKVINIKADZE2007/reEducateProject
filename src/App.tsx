@@ -1,6 +1,7 @@
+'use client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Invoice from './pages/Invoice';
+import { Invoice } from './pages/Invoice';
 
 export default function App() {
   return (
