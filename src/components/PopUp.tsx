@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { UseFormRegister } from 'react-hook-form';
 
 type ItemType = {
   name: string;
@@ -7,7 +8,35 @@ type ItemType = {
   total: string;
 };
 
-export default function PopUp() {
+export default function PopUp({
+  register,
+}: {
+  register: UseFormRegister<{
+    items?:
+      | {
+          quantity: number;
+          price: number;
+          itemName: string;
+        }[]
+      | undefined;
+    name: string;
+    email: string;
+    fromStreet: string;
+    fromCity: string;
+    fromPostCode: string;
+    fromCountry: string;
+    street: string;
+    city: string;
+    country: string;
+    postCode: string;
+    invoiceDate: Date;
+    date: number;
+    month: string;
+    year: number;
+    paymentTerms: string;
+    description: string;
+  }>;
+}) {
   const [items, setItems] = useState<ItemType[]>([]);
   const [showNewItem, setShowNewItem] = useState<boolean>(false);
   const [newItem, setNewItem] = useState<ItemType>({
@@ -44,6 +73,7 @@ export default function PopUp() {
             <input
               className='input'
               type='text'
+              {...register(`items.${items.length}.itemName`)}
               value={newItem.name}
               onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
             />
@@ -55,6 +85,7 @@ export default function PopUp() {
                 <input
                   className='input'
                   type='number'
+                  {...register(`items.${items.length}.quantity`)}
                   value={newItem.quantity}
                   onChange={(e) =>
                     setNewItem({ ...newItem, quantity: e.target.value })
@@ -67,6 +98,7 @@ export default function PopUp() {
                 <input
                   className='input'
                   type='number'
+                  {...register(`items.${items.length}.price`)}
                   value={newItem.price}
                   onChange={(e) =>
                     setNewItem({ ...newItem, price: e.target.value })

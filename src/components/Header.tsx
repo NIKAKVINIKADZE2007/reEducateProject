@@ -5,7 +5,8 @@ import plius from '../assets/plius.png';
 const Header: React.FC<{
   setFilterStatus: (status: string | null) => void;
   pendingInvoicesCount: number;
-}> = ({ setFilterStatus, pendingInvoicesCount }) => {
+  setShowNewInvoice: React.Dispatch<React.SetStateAction<boolean>>;
+}> = ({ setFilterStatus, pendingInvoicesCount, setShowNewInvoice }) => {
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
 
   const toggleFilter = () => {
@@ -69,7 +70,10 @@ const Header: React.FC<{
           )}
         </div>
 
-        <button className='w-[190px] h-[50px] pl-3 rounded-[50px] flex items-center gap-5 bg-[#7C5DFA]'>
+        <button
+          className='w-[190px] h-[50px] pl-3 rounded-[50px] flex items-center gap-5 bg-[#7C5DFA]'
+          onClick={() => setShowNewInvoice(true)}
+        >
           <div className='w-[40px] h-[40px] flex items-center justify-center rounded-3xl bg-white'>
             <img src={upArrow} alt='plus icon' />
           </div>

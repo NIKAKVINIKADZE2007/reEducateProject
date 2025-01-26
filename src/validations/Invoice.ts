@@ -3,21 +3,28 @@
 import * as Yup from 'yup';
 
 export const invoiceSchema = Yup.object({
-  streetAddress: Yup.string().required('Street Address is required'),
-  city: Yup.string().required('City is required'),
-  postCode: Yup.string().required('Post Code is required'),
-  country: Yup.string().required('Country is required'),
-  clientName: Yup.string().required("Client's Name is required"),
-  clientEmail: Yup.string()
+  fromStreet: Yup.string().required('Street Address is required'),
+  fromCity: Yup.string().required('City is required'),
+  fromPostCode: Yup.string().required('Post Code is required'),
+  fromCountry: Yup.string().required('Country is required'),
+  name: Yup.string().required("Client's Name is required"),
+  email: Yup.string()
     .email('Invalid email format')
     .required("Client's Email is required"),
+  street: Yup.string().required('client street is requeired'),
+  month: Yup.string().required('client street is requeired'),
+  country: Yup.string().required('county is requred'),
+  year: Yup.number().required('client street is requeired'),
+  date: Yup.number().required('client street is requeired'),
+  city: Yup.string().required('city is required'),
+  postCode: Yup.string().required('postCode is required'),
   invoiceDate: Yup.date().required('Invoice Date is required'),
   paymentTerms: Yup.string().required('Payment Terms are required'),
-  projectDescription: Yup.string().required('Project Description is required'),
+  description: Yup.string().required('Project Description is required'),
   items: Yup.array()
     .of(
       Yup.object({
-        name: Yup.string().required('Item name is required'),
+        itemName: Yup.string().required('Item name is required'),
         quantity: Yup.number()
           .required('Quantity is required')
           .positive('Quantity must be greater than 0'),

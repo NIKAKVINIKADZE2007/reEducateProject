@@ -1,6 +1,6 @@
 import leftAroow from '../src/assets/icon-arrow-left.svg';
 
-interface Invoice {
+export interface Invoice {
   id: string;
   fromStreet: string;
   fromCity: string;

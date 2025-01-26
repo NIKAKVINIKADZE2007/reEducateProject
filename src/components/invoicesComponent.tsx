@@ -1,11 +1,18 @@
 import { useState } from 'react';
-import invoicesData from '../../invoices/InvoiceJson';
+import invoicesData, { Invoice } from '../../invoices/InvoiceJson';
 
-const Invoices = ({ filterStatus }: { filterStatus: string | null }) => {
+const Invoices = ({
+  filterStatus,
+  invoices,
+  setInvoices,
+}: {
+  filterStatus: string | null;
+  invoices: Invoice[];
+  setInvoices: React.Dispatch<React.SetStateAction<Invoice[]>>;
+}) => {
   const [selectedInvoice, setSelectedInvoice] = useState<null | { id: string }>(
     null
   );
-  const [invoices, setInvoices] = useState(invoicesData);
 
   const filteredInvoices = filterStatus
     ? invoices.filter((invoice) => invoice.status === filterStatus)
