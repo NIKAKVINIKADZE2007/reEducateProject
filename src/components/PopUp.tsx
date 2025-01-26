@@ -34,6 +34,9 @@ export default function PopUp() {
       <h3 className='text-[#777F98] mt-[70px] mb-[15px] tablet:mb-[14px]'>
         Item List
       </h3>
+      {items.length == 0 && (
+        <p className='text-red-500'>items must not be empty</p>
+      )}
       {showNewItem && (
         <div className='flex flex-col tablet:flex-row mb-[48px]'>
           <div className='w-full'>

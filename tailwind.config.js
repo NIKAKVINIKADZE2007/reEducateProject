@@ -14,6 +14,7 @@ export default {
         blueGray: '#7E88C3',
         lightGray: '#DFE3FA',
         darkGray: '#888EB0',
+        fontDark: '#0C0E16',
       },
     },
   },

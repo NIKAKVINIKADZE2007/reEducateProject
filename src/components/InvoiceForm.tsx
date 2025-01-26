@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { InvoiceFormData, invoiceSchema } from '../validations/Invoice';
 import PopUp from './PopUp';
+import { useState } from 'react';
 
 export default function InvoiceForm({
   setShowNewInvoice,
@@ -16,7 +17,18 @@ export default function InvoiceForm({
     resolver: yupResolver(invoiceSchema),
   });
 
-  const onSubmit = () => {
+  const [selected, setSelected] = useState<string>('Net 1 Day');
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const handleSelection = (option: string) => {
+    setSelected(option);
+    setIsOpen(false);
+  };
+
+  const options = ['Net 1 Day', 'Net 7 Day', 'Net 14 Day', 'Net 30 Day'];
+
+  const onSubmit = (data: InvoiceFormData) => {
+    console.log(data);
     console.log('submited');
   };
 
@@ -141,11 +153,28 @@ export default function InvoiceForm({
             {/* Payment Terms */}
             <div className='w-full tablet:ml-6'>
               <label className='text-blueGray text-[13px]'>Payment Terms</label>
-              <input
-                className='input'
-                type='text'
-                {...register('paymentTerms')}
-              />
+              <button
+                type='button'
+                className='input text-start'
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                {selected}
+              </button>
+
+              {isOpen && (
+                <div className='absolute z-10 w-48 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg'>
+                  {options.map((option) => (
+                    <button
+                      type='button'
+                      key={option}
+                      onClick={() => handleSelection(option)}
+                      className='block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100'
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              )}
               {errors.paymentTerms && (
                 <p className='text-red-500'>{errors.paymentTerms?.message}</p>
               )}
