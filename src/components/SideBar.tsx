@@ -2,7 +2,7 @@ import { Logo, moon, sun, pfp } from '../assets';
 
 export default function SideBar() {
   return (
-    <div className='w-full h-[72px] flex  justify-between bg-[#373B53] tablet:h-[80px] desktop:flex-col desktop:h-screen desktop:w-[103px] desktop:rounded-r-[20px] '>
+    <div className='w-full h-[72px] absolute top-0 z-50 flex  justify-between bg-[#373B53] tablet:h-[80px] desktop:flex-col desktop:h-screen desktop:w-[103px] desktop:rounded-r-[20px] '>
       <div className='size-[72px] flex justify-center items-center rounded-r-[20px] bg-purpleDark tablet:size-[80px] desktop:size-[103px]'>
         <img className='h-[28px] w-[28px]' src={Logo} alt='logo' />
       </div>
