@@ -6,6 +6,7 @@ import { useState } from "react";
 import leftArrow from "../assets/icon-arrow-left.svg";
 import invoices, { Invoice } from "../../invoices/InvoiceJson";
 
+
 export default function InvoiceForm({
   setShowNewInvoice,
   setInvoices,
@@ -46,7 +47,16 @@ export default function InvoiceForm({
     return monthAbbreviations[Number(date.split("-")[1])];
   };
 
-  const [selected, setSelected] = useState<string>("Net 1 Day");
+
+  useEffect(() => {
+    if (invoice) {
+      setSelected(invoice.paymentTerms);
+      const date = new Date(`${invoice.year}-${invoice.month}-${invoice.date}`);
+      setValue('invoiceDate', date);
+    }
+  }, []);
+
+  const [selected, setSelected] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleSelection = (option: string) => {
@@ -57,25 +67,14 @@ export default function InvoiceForm({
   const options = ["Net 1 Day", "Net 7 Day", "Net 14 Day", "Net 30 Day"];
 
   const onSubmit = (data: InvoiceFormData, status: string) => {
-    const { items } = data;
-    if (!items) return console.log("Items not defined");
 
-    const renamedItems = items.map((item) => {
-      const { itemName, quantity, price } = item;
-      return {
-        itemName,
-        quantity,
-        price,
-      };
-    });
-
-    delete data.items;
+    console.log(data, 'data');
 
     const updatedInvoice = {
       ...data,
       id: invoice?.id || `${invoices.length + 1}`,
-      ...renamedItems[0],
-      status: status as "Pending" | "Draft",
+
+      status: status as 'Pending' | 'Draft',
       leftArrow: leftArrow,
     };
 
@@ -92,6 +91,8 @@ export default function InvoiceForm({
 
     reset(); // Reset the form
     setShowNewInvoice(false);
+
+    console.log(invoice);
     console.log(setShowNewInvoice);
   };
 
@@ -252,6 +253,14 @@ export default function InvoiceForm({
                   setValue("year", Number(dates[0]));
                   setValue("invoiceDate", new Date());
                 }}
+
+                type='date'
+                value={
+                  invoice
+                    ? `${invoice.year}-${invoice.month}-${invoice.date}`
+                    : ''
+                }
+
                 type="date"
               />
               {errors.invoiceDate && (
