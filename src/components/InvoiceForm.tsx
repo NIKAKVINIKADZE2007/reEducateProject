@@ -101,9 +101,8 @@ export default function InvoiceForm({
         onSubmit(data, 'Pending');
       })}
     >
-
-      <div className="flex flex-col w-full desktop:ml-[159px] max-w-[327px] tablet:max-w-[504px] tablet:mx-auto">
-        <div className="w-full">
+      <div className='flex flex-col w-full desktop:ml-[159px] max-w-[327px] tablet:max-w-[504px] tablet:mx-auto'>
+        <div className='w-full'>
           <h3
             className={`text-[15px] font-bold 
               text-purpleDark
@@ -112,46 +111,53 @@ export default function InvoiceForm({
             Bill From
           </h3>
 
-          <div className="w-full">
-            <div className="w-full">
-              <label className="text-blueGray text-[13px]">
+          <div className='w-full'>
+            <div className='w-full'>
+              <label className='text-blueGray text-[13px]'>
                 Street Address
               </label>
               <input
-                className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-                type="text"
-                {...register("fromStreet")}
-
+                className={`input ${
+                  isLight
+                    ? 'bg-white text-[#0C0E16]'
+                    : 'bg-[#252945] text-white'
+                }`}
+                type='text'
+                {...register('fromStreet')}
               />
               {errors.fromStreet && (
                 <p className='text-red-500'>{errors.fromStreet?.message}</p>
               )}
             </div>
 
-
-            <div className="w-full flex-col flex tablet:flex-row">
-              <div className="flex gap-6 mt-[25px] w-full">
-                <div className="w-full">
-                  <label className="text-blueGray text-[13px]">City</label>
+            <div className='w-full flex-col flex tablet:flex-row'>
+              <div className='flex gap-6 mt-[25px] w-full'>
+                <div className='w-full'>
+                  <label className='text-blueGray text-[13px]'>City</label>
                   <input
-                    className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-                    type="text"
-                    {...register("fromCity")}
-
+                    className={`input ${
+                      isLight
+                        ? 'bg-white text-[#0C0E16]'
+                        : 'bg-[#252945] text-white'
+                    }`}
+                    type='text'
+                    {...register('fromCity')}
                   />
                   {errors.fromCity && (
                     <p className='text-red-500'>{errors.fromCity?.message}</p>
                   )}
                 </div>
 
-
-                <div className="w-full">
-                  <label className="text-blueGray text-[13px]">Post Code</label>
+                <div className='w-full'>
+                  <label className='text-blueGray text-[13px]'>Post Code</label>
                   <input
-                    className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-                    type="text"
-                    {...register("fromPostCode")}
-
+                    className={`input ${
+                      isLight
+                        ? 'bg-white text-[#0C0E16]'
+                        : 'bg-[#252945] text-white'
+                    }`}
+                    type='text'
+                    {...register('fromPostCode')}
                   />
                   {errors.fromPostCode && (
                     <p className='text-red-500'>
@@ -161,14 +167,16 @@ export default function InvoiceForm({
                 </div>
               </div>
 
-
-              <div className="mt-[25px] tablet:ml-6">
-                <label className="text-blueGray text-[13px]">Country</label>
+              <div className='mt-[25px] tablet:ml-6'>
+                <label className='text-blueGray text-[13px]'>Country</label>
                 <input
-                  className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-                  type="text"
-                  {...register("fromCountry")}
-
+                  className={`input ${
+                    isLight
+                      ? 'bg-white text-[#0C0E16]'
+                      : 'bg-[#252945] text-white'
+                  }`}
+                  type='text'
+                  {...register('fromCountry')}
                 />
                 {errors.fromCountry && (
                   <p className='text-red-500'>{errors.fromCountry?.message}</p>
@@ -177,19 +185,19 @@ export default function InvoiceForm({
             </div>
           </div>
         </div>
-
-
-        <div className="w-full">
-          <h3 className="text-[15px] font-bold text-purpleDark mb-[25px] mt-[42px]">
+        <div className='w-full'>
+          <h3 className='text-[15px] font-bold text-purpleDark mb-[25px] mt-[42px]'>
             Bill To
           </h3>
 
-          <div className="w-full">
-            <label className="text-blueGray text-[13px]">Client’s Name</label>
+          <div className='w-full'>
+            <label className='text-blueGray text-[13px]'>Client’s Name</label>
             <input
-              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-              type="text"
-              {...register("name")}
+              className={`input ${
+                isLight ? 'bg-white text-[#0C0E16]' : 'bg-[#252945] text-white'
+              }`}
+              type='text'
+              {...register('name')}
             />
 
             {errors.name && (
@@ -197,13 +205,14 @@ export default function InvoiceForm({
             )}
           </div>
 
-
-          <div className="w-full mt-[25px]">
-            <label className="text-blueGray text-[13px]">Client’s Email</label>
+          <div className='w-full mt-[25px]'>
+            <label className='text-blueGray text-[13px]'>Client’s Email</label>
             <input
-              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-              type="text"
-              {...register("email")}
+              className={`input ${
+                isLight ? 'bg-white text-[#0C0E16]' : 'bg-[#252945] text-white'
+              }`}
+              type='text'
+              {...register('email')}
             />
 
             {errors.email && (
@@ -211,13 +220,14 @@ export default function InvoiceForm({
             )}
           </div>
 
-
-          <div className="w-full mt-[25px]">
-            <label className="text-blueGray text-[13px]">Street Address</label>
+          <div className='w-full mt-[25px]'>
+            <label className='text-blueGray text-[13px]'>Street Address</label>
             <input
-              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-              type="text"
-              {...register("street")}
+              className={`input ${
+                isLight ? 'bg-white text-[#0C0E16]' : 'bg-[#252945] text-white'
+              }`}
+              type='text'
+              {...register('street')}
             />
 
             {errors.street && (
@@ -226,15 +236,18 @@ export default function InvoiceForm({
           </div>
         </div>
 
-e
-        <div className="w-full flex-col flex tablet:flex-row">
-          <div className="flex gap-6 mt-[25px] w-full">
-            <div className="w-full">
-              <label className="text-blueGray text-[13px]">City</label>
+        <div className='w-full flex-col flex tablet:flex-row'>
+          <div className='flex gap-6 mt-[25px] w-full'>
+            <div className='w-full'>
+              <label className='text-blueGray text-[13px]'>City</label>
               <input
-                className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-                type="text"
-                {...register("city")}
+                className={`input ${
+                  isLight
+                    ? 'bg-white text-[#0C0E16]'
+                    : 'bg-[#252945] text-white'
+                }`}
+                type='text'
+                {...register('city')}
               />
 
               {errors.city && (
@@ -242,13 +255,16 @@ e
               )}
             </div>
 
-
-            <div className="w-full">
-              <label className="text-blueGray text-[13px]">Post Code</label>
+            <div className='w-full'>
+              <label className='text-blueGray text-[13px]'>Post Code</label>
               <input
-                className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-                type="text"
-                {...register("postCode")}
+                className={`input ${
+                  isLight
+                    ? 'bg-white text-[#0C0E16]'
+                    : 'bg-[#252945] text-white'
+                }`}
+                type='text'
+                {...register('postCode')}
               />
 
               {errors.postCode && (
@@ -257,13 +273,14 @@ e
             </div>
           </div>
 
-
-          <div className="mt-[25px] tablet:ml-6">
-            <label className="text-blueGray text-[13px]">Country</label>
+          <div className='mt-[25px] tablet:ml-6'>
+            <label className='text-blueGray text-[13px]'>Country</label>
             <input
-              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-              type="text"
-              {...register("country")}
+              className={`input ${
+                isLight ? 'bg-white text-[#0C0E16]' : 'bg-[#252945] text-white'
+              }`}
+              type='text'
+              {...register('country')}
             />
 
             {errors.country && (
@@ -271,14 +288,16 @@ e
             )}
           </div>
         </div>
-
-        <div className="w-full flex-col flex">
-          <div className="flex gap-6 mt-[25px] w-full">
-            <div className="w-full">
-              <label className="text-blueGray text-[13px]">Invoice Date</label>
+        <div className='w-full flex-col flex'>
+          <div className='flex gap-6 mt-[25px] w-full'>
+            <div className='w-full'>
+              <label className='text-blueGray text-[13px]'>Invoice Date</label>
               <input
-                className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-
+                className={`input ${
+                  isLight
+                    ? 'bg-white text-[#0C0E16]'
+                    : 'bg-[#252945] text-white'
+                }`}
                 onChange={(e) => {
                   setValue(`month`, getMonthAbbreviation(e.target.value));
                   const dates = e.target.value.split('-');
@@ -298,15 +317,15 @@ e
               )}
             </div>
 
-
-            <div className="w-full tablet:ml-6">
-              <label className="text-blueGray text-[13px]">Payment Terms</label>
+            <div className='w-full tablet:ml-6'>
+              <label className='text-blueGray text-[13px]'>Payment Terms</label>
               <button
-                type="button"
+                type='button'
                 className={`input ${
-                  isLight ? "bg-white" : "bg-[#252945]"
+                  isLight
+                    ? 'bg-white text-[#0C0E16]'
+                    : 'bg-[#252945] text-white'
                 } text-start`}
-
                 onClick={() => setIsOpen(!isOpen)}
               >
                 {selected}
@@ -335,15 +354,16 @@ e
             </div>
           </div>
 
-
-          <div className="mt-[25px]">
-            <label className="text-blueGray text-[13px]">
+          <div className='mt-[25px]'>
+            <label className='text-blueGray text-[13px]'>
               Project Description
             </label>
             <input
-              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
-              type="text"
-              {...register("description")}
+              className={`input ${
+                isLight ? 'bg-white text-[#0C0E16]' : 'bg-[#252945] text-white'
+              }`}
+              type='text'
+              {...register('description')}
             />
 
             {errors.description && (
