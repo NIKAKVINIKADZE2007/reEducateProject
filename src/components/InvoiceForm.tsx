@@ -10,7 +10,9 @@ export default function InvoiceForm({
   setShowNewInvoice,
   setInvoices,
   invoice,
+  isLight,
 }: {
+  isLight: boolean;
   setShowNewInvoice: React.Dispatch<React.SetStateAction<boolean>>;
   setInvoices: React.Dispatch<React.SetStateAction<Invoice[]>>;
   invoice?: Invoice;
@@ -86,16 +88,14 @@ export default function InvoiceForm({
         )
       );
     } else {
-      // Otherwise, add a new invoice
       setInvoices((prevInvoices) => [...prevInvoices, updatedInvoice]);
     }
 
-    reset(); // Reset the form
+    reset();
     setShowNewInvoice(false);
     console.log(setShowNewInvoice);
   };
 
-  // design
   return (
     <form
       className="w-full absolute tablet:max-w-[719px] mx-auto"
@@ -105,18 +105,21 @@ export default function InvoiceForm({
     >
       <div className="flex flex-col w-full desktop:ml-[159px] max-w-[327px] tablet:max-w-[504px] tablet:mx-auto">
         <div className="w-full">
-          <h3 className="text-[15px] font-bold text-purpleDark mb-[25px]">
+          <h3
+            className={`text-[15px] font-bold 
+              text-purpleDark
+             mb-[25px]`}
+          >
             Bill From
           </h3>
 
           <div className="w-full">
-            {/* Street Address */}
             <div className="w-full">
               <label className="text-blueGray text-[13px]">
                 Street Address
               </label>
               <input
-                className="input"
+                className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                 type="text"
                 {...register("fromStreet")}
               />
@@ -127,11 +130,10 @@ export default function InvoiceForm({
 
             <div className="w-full flex-col flex tablet:flex-row">
               <div className="flex gap-6 mt-[25px] w-full">
-                {/* City */}
                 <div className="w-full">
                   <label className="text-blueGray text-[13px]">City</label>
                   <input
-                    className="input"
+                    className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                     type="text"
                     {...register("fromCity")}
                   />
@@ -140,11 +142,10 @@ export default function InvoiceForm({
                   )}
                 </div>
 
-                {/* Post Code */}
                 <div className="w-full">
                   <label className="text-blueGray text-[13px]">Post Code</label>
                   <input
-                    className="input"
+                    className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                     type="text"
                     {...register("fromPostCode")}
                   />
@@ -156,11 +157,10 @@ export default function InvoiceForm({
                 </div>
               </div>
 
-              {/* Country */}
               <div className="mt-[25px] tablet:ml-6">
                 <label className="text-blueGray text-[13px]">Country</label>
                 <input
-                  className="input"
+                  className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                   type="text"
                   {...register("fromCountry")}
                 />
@@ -172,34 +172,42 @@ export default function InvoiceForm({
           </div>
         </div>
 
-        {/* Bill To */}
         <div className="w-full">
           <h3 className="text-[15px] font-bold text-purpleDark mb-[25px] mt-[42px]">
             Bill To
           </h3>
 
-          {/* Client Name */}
           <div className="w-full">
             <label className="text-blueGray text-[13px]">Client’s Name</label>
-            <input className="input" type="text" {...register("name")} />
+            <input
+              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
+              type="text"
+              {...register("name")}
+            />
             {errors.name && (
               <p className="text-red-500">{errors.name?.message}</p>
             )}
           </div>
 
-          {/* Client Email */}
           <div className="w-full mt-[25px]">
             <label className="text-blueGray text-[13px]">Client’s Email</label>
-            <input className="input" type="text" {...register("email")} />
+            <input
+              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
+              type="text"
+              {...register("email")}
+            />
             {errors.email && (
               <p className="text-red-500">{errors.email?.message}</p>
             )}
           </div>
 
-          {/* Street Address */}
           <div className="w-full mt-[25px]">
             <label className="text-blueGray text-[13px]">Street Address</label>
-            <input className="input" type="text" {...register("street")} />
+            <input
+              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
+              type="text"
+              {...register("street")}
+            />
             {errors.street && (
               <p className="text-red-500">{errors.street?.message}</p>
             )}
@@ -208,43 +216,50 @@ export default function InvoiceForm({
 
         <div className="w-full flex-col flex tablet:flex-row">
           <div className="flex gap-6 mt-[25px] w-full">
-            {/* City */}
             <div className="w-full">
               <label className="text-blueGray text-[13px]">City</label>
-              <input className="input" type="text" {...register("city")} />
+              <input
+                className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
+                type="text"
+                {...register("city")}
+              />
               {errors.city && (
                 <p className="text-red-500">{errors.city?.message}</p>
               )}
             </div>
 
-            {/* Post Code */}
             <div className="w-full">
               <label className="text-blueGray text-[13px]">Post Code</label>
-              <input className="input" type="text" {...register("postCode")} />
+              <input
+                className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
+                type="text"
+                {...register("postCode")}
+              />
               {errors.postCode && (
                 <p className="text-red-500">{errors.postCode?.message}</p>
               )}
             </div>
           </div>
 
-          {/* Country */}
           <div className="mt-[25px] tablet:ml-6">
             <label className="text-blueGray text-[13px]">Country</label>
-            <input className="input" type="text" {...register("country")} />
+            <input
+              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
+              type="text"
+              {...register("country")}
+            />
             {errors.country && (
               <p className="text-red-500">{errors.country?.message}</p>
             )}
           </div>
         </div>
 
-        {/* Additional Fields */}
         <div className="w-full flex-col flex">
           <div className="flex gap-6 mt-[25px] w-full">
-            {/* Invoice Date */}
             <div className="w-full">
               <label className="text-blueGray text-[13px]">Invoice Date</label>
               <input
-                className="input"
+                className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                 onChange={(e) => {
                   setValue(`month`, getMonthAbbreviation(e.target.value));
                   const dates = e.target.value.split("-");
@@ -259,12 +274,13 @@ export default function InvoiceForm({
               )}
             </div>
 
-            {/* Payment Terms */}
             <div className="w-full tablet:ml-6">
               <label className="text-blueGray text-[13px]">Payment Terms</label>
               <button
                 type="button"
-                className="input text-start"
+                className={`input ${
+                  isLight ? "bg-white" : "bg-[#252945]"
+                } text-start`}
                 onClick={() => setIsOpen(!isOpen)}
               >
                 {selected}
@@ -293,18 +309,21 @@ export default function InvoiceForm({
             </div>
           </div>
 
-          {/* Project Description */}
           <div className="mt-[25px]">
             <label className="text-blueGray text-[13px]">
               Project Description
             </label>
-            <input className="input" type="text" {...register("description")} />
+            <input
+              className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
+              type="text"
+              {...register("description")}
+            />
             {errors.description && (
               <p className="text-red-500">{errors.description?.message}</p>
             )}
           </div>
         </div>
-        <PopUp register={register} invoice={invoice} />
+        <PopUp isLight={isLight} register={register} invoice={invoice} />
       </div>
       <div className="opacity-[0.1] w-full h-[64px]   mt-6 bg-gradient-to-r from-[#979797] to-[#979797]  bg-opacity-[0.02] tablet:hidden" />
       <div
