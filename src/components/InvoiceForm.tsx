@@ -1,10 +1,10 @@
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { InvoiceFormData, invoiceSchema } from "../validations/Invoice";
-import PopUp from "./PopUp";
-import { useState } from "react";
-import leftArrow from "../assets/icon-arrow-left.svg";
-import invoices, { Invoice } from "../../invoices/InvoiceJson";
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { InvoiceFormData, invoiceSchema } from '../validations/Invoice';
+import PopUp from './PopUp';
+import { useState, useEffect } from 'react';
+import leftArrow from '../assets/icon-arrow-left.svg';
+import invoices, { Invoice } from '../../invoices/InvoiceJson';
 
 export default function InvoiceForm({
   setShowNewInvoice,
@@ -32,23 +32,31 @@ export default function InvoiceForm({
 
   const getMonthAbbreviation = (date: string): string => {
     const monthAbbreviations: string[] = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
-    return monthAbbreviations[Number(date.split("-")[1])];
+    return monthAbbreviations[Number(date.split('-')[1])];
   };
 
-  const [selected, setSelected] = useState<string>("Net 1 Day");
+  useEffect(() => {
+    if (invoice) {
+      setSelected(invoice.paymentTerms);
+      const date = new Date(`${invoice.year}-${invoice.month}-${invoice.date}`);
+      setValue('invoiceDate', date);
+    }
+  }, []);
+
+  const [selected, setSelected] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleSelection = (option: string) => {
@@ -56,28 +64,16 @@ export default function InvoiceForm({
     setIsOpen(false);
   };
 
-  const options = ["Net 1 Day", "Net 7 Day", "Net 14 Day", "Net 30 Day"];
+  const options = ['Net 1 Day', 'Net 7 Day', 'Net 14 Day', 'Net 30 Day'];
 
   const onSubmit = (data: InvoiceFormData, status: string) => {
-    const { items } = data;
-    if (!items) return console.log("Items not defined");
-
-    const renamedItems = items.map((item) => {
-      const { itemName, quantity, price } = item;
-      return {
-        itemName,
-        quantity,
-        price,
-      };
-    });
-
-    delete data.items;
+    console.log(data, 'data');
 
     const updatedInvoice = {
       ...data,
       id: invoice?.id || `${invoices.length + 1}`,
-      ...renamedItems[0],
-      status: status as "Pending" | "Draft",
+
+      status: status as 'Pending' | 'Draft',
       leftArrow: leftArrow,
     };
 
@@ -93,16 +89,19 @@ export default function InvoiceForm({
 
     reset();
     setShowNewInvoice(false);
+
+    console.log(invoice);
     console.log(setShowNewInvoice);
   };
 
   return (
     <form
-      className="w-full absolute tablet:max-w-[719px] mx-auto"
+      className='w-full absolute tablet:max-w-[719px] mx-auto'
       onSubmit={handleSubmit((data) => {
-        onSubmit(data, "Pending");
+        onSubmit(data, 'Pending');
       })}
     >
+
       <div className="flex flex-col w-full desktop:ml-[159px] max-w-[327px] tablet:max-w-[504px] tablet:mx-auto">
         <div className="w-full">
           <h3
@@ -122,11 +121,13 @@ export default function InvoiceForm({
                 className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                 type="text"
                 {...register("fromStreet")}
+
               />
               {errors.fromStreet && (
-                <p className="text-red-500">{errors.fromStreet?.message}</p>
+                <p className='text-red-500'>{errors.fromStreet?.message}</p>
               )}
             </div>
+
 
             <div className="w-full flex-col flex tablet:flex-row">
               <div className="flex gap-6 mt-[25px] w-full">
@@ -136,11 +137,13 @@ export default function InvoiceForm({
                     className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                     type="text"
                     {...register("fromCity")}
+
                   />
                   {errors.fromCity && (
-                    <p className="text-red-500">{errors.fromCity?.message}</p>
+                    <p className='text-red-500'>{errors.fromCity?.message}</p>
                   )}
                 </div>
+
 
                 <div className="w-full">
                   <label className="text-blueGray text-[13px]">Post Code</label>
@@ -148,14 +151,16 @@ export default function InvoiceForm({
                     className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                     type="text"
                     {...register("fromPostCode")}
+
                   />
                   {errors.fromPostCode && (
-                    <p className="text-red-500">
+                    <p className='text-red-500'>
                       {errors.fromPostCode?.message}
                     </p>
                   )}
                 </div>
               </div>
+
 
               <div className="mt-[25px] tablet:ml-6">
                 <label className="text-blueGray text-[13px]">Country</label>
@@ -163,14 +168,16 @@ export default function InvoiceForm({
                   className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                   type="text"
                   {...register("fromCountry")}
+
                 />
                 {errors.fromCountry && (
-                  <p className="text-red-500">{errors.fromCountry?.message}</p>
+                  <p className='text-red-500'>{errors.fromCountry?.message}</p>
                 )}
               </div>
             </div>
           </div>
         </div>
+
 
         <div className="w-full">
           <h3 className="text-[15px] font-bold text-purpleDark mb-[25px] mt-[42px]">
@@ -184,10 +191,12 @@ export default function InvoiceForm({
               type="text"
               {...register("name")}
             />
+
             {errors.name && (
-              <p className="text-red-500">{errors.name?.message}</p>
+              <p className='text-red-500'>{errors.name?.message}</p>
             )}
           </div>
+
 
           <div className="w-full mt-[25px]">
             <label className="text-blueGray text-[13px]">Client’s Email</label>
@@ -196,10 +205,12 @@ export default function InvoiceForm({
               type="text"
               {...register("email")}
             />
+
             {errors.email && (
-              <p className="text-red-500">{errors.email?.message}</p>
+              <p className='text-red-500'>{errors.email?.message}</p>
             )}
           </div>
+
 
           <div className="w-full mt-[25px]">
             <label className="text-blueGray text-[13px]">Street Address</label>
@@ -208,12 +219,14 @@ export default function InvoiceForm({
               type="text"
               {...register("street")}
             />
+
             {errors.street && (
-              <p className="text-red-500">{errors.street?.message}</p>
+              <p className='text-red-500'>{errors.street?.message}</p>
             )}
           </div>
         </div>
 
+e
         <div className="w-full flex-col flex tablet:flex-row">
           <div className="flex gap-6 mt-[25px] w-full">
             <div className="w-full">
@@ -223,10 +236,12 @@ export default function InvoiceForm({
                 type="text"
                 {...register("city")}
               />
+
               {errors.city && (
-                <p className="text-red-500">{errors.city?.message}</p>
+                <p className='text-red-500'>{errors.city?.message}</p>
               )}
             </div>
+
 
             <div className="w-full">
               <label className="text-blueGray text-[13px]">Post Code</label>
@@ -235,11 +250,13 @@ export default function InvoiceForm({
                 type="text"
                 {...register("postCode")}
               />
+
               {errors.postCode && (
-                <p className="text-red-500">{errors.postCode?.message}</p>
+                <p className='text-red-500'>{errors.postCode?.message}</p>
               )}
             </div>
           </div>
+
 
           <div className="mt-[25px] tablet:ml-6">
             <label className="text-blueGray text-[13px]">Country</label>
@@ -248,8 +265,9 @@ export default function InvoiceForm({
               type="text"
               {...register("country")}
             />
+
             {errors.country && (
-              <p className="text-red-500">{errors.country?.message}</p>
+              <p className='text-red-500'>{errors.country?.message}</p>
             )}
           </div>
         </div>
@@ -260,19 +278,26 @@ export default function InvoiceForm({
               <label className="text-blueGray text-[13px]">Invoice Date</label>
               <input
                 className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
+
                 onChange={(e) => {
                   setValue(`month`, getMonthAbbreviation(e.target.value));
-                  const dates = e.target.value.split("-");
-                  setValue("date", Number(dates[2]));
-                  setValue("year", Number(dates[0]));
-                  setValue("invoiceDate", new Date());
+                  const dates = e.target.value.split('-');
+                  setValue('date', Number(dates[2]));
+                  setValue('year', Number(dates[0]));
+                  setValue('invoiceDate', new Date());
                 }}
-                type="date"
+                type='date'
+                value={
+                  invoice
+                    ? `${invoice.year}-${invoice.month}-${invoice.date}`
+                    : ''
+                }
               />
               {errors.invoiceDate && (
-                <p className="text-red-500">{errors.invoiceDate?.message}</p>
+                <p className='text-red-500'>{errors.invoiceDate?.message}</p>
               )}
             </div>
+
 
             <div className="w-full tablet:ml-6">
               <label className="text-blueGray text-[13px]">Payment Terms</label>
@@ -281,22 +306,23 @@ export default function InvoiceForm({
                 className={`input ${
                   isLight ? "bg-white" : "bg-[#252945]"
                 } text-start`}
+
                 onClick={() => setIsOpen(!isOpen)}
               >
                 {selected}
               </button>
 
               {isOpen && (
-                <div className="absolute z-10 w-48 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+                <div className='absolute z-10 w-48 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg'>
                   {options.map((option) => (
                     <button
-                      type="button"
+                      type='button'
                       key={option}
                       onClick={() => {
                         handleSelection(option);
-                        setValue("paymentTerms", option);
+                        setValue('paymentTerms', option);
                       }}
-                      className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
+                      className='block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100'
                     >
                       {option}
                     </button>
@@ -304,10 +330,11 @@ export default function InvoiceForm({
                 </div>
               )}
               {errors.paymentTerms && (
-                <p className="text-red-500">{errors.paymentTerms?.message}</p>
+                <p className='text-red-500'>{errors.paymentTerms?.message}</p>
               )}
             </div>
           </div>
+
 
           <div className="mt-[25px]">
             <label className="text-blueGray text-[13px]">
@@ -318,45 +345,46 @@ export default function InvoiceForm({
               type="text"
               {...register("description")}
             />
+
             {errors.description && (
-              <p className="text-red-500">{errors.description?.message}</p>
+              <p className='text-red-500'>{errors.description?.message}</p>
             )}
           </div>
         </div>
         <PopUp isLight={isLight} register={register} invoice={invoice} />
       </div>
-      <div className="opacity-[0.1] w-full h-[64px]   mt-6 bg-gradient-to-r from-[#979797] to-[#979797]  bg-opacity-[0.02] tablet:hidden" />
+      <div className='opacity-[0.1] w-full h-[64px]   mt-6 bg-gradient-to-r from-[#979797] to-[#979797]  bg-opacity-[0.02] tablet:hidden' />
       <div
         className={`flex items-center  h-[91px] px-6 text-[15px] tablet:max-w-[504px] desktop:ml-[159px] tablet:mx-auto  ${
-          invoice ? " justify-end" : "justify-between"
+          invoice ? ' justify-end' : 'justify-between'
         } `}
       >
         <button
-          type="button"
+          type='button'
           onClick={() => setShowNewInvoice(false)}
-          className="h-[48px] max-w-[84px] w-full text-blueGray bg-[#F9FAFE] rounded-3xl"
+          className='h-[48px] max-w-[84px] w-full text-blueGray bg-[#F9FAFE] rounded-3xl'
         >
           Discard
         </button>
         <div
           className={`flex justify-between max-w-[236px]   ${
-            invoice ? " w-[138px] ml-8" : "w-full"
+            invoice ? ' w-[138px] ml-8' : 'w-full'
           }`}
         >
           <button
             onClick={handleSubmit((data) => {
-              onSubmit(data, "Draft");
+              onSubmit(data, 'Draft');
             })}
             className={`text-darkGray bg-[#373B53] h-[48px] max-w-[117px] w-full rounded-3xl ${
-              invoice ? "hidden" : ""
+              invoice ? 'hidden' : ''
             }`}
           >
             Save as Draft
           </button>
 
           <button
-            type="submit"
-            className="text-white bg-purpleDark h-[48px] max-w-[112px] w-full rounded-3xl"
+            type='submit'
+            className='text-white bg-purpleDark h-[48px] max-w-[112px] w-full rounded-3xl'
           >
             Save & Send
           </button>

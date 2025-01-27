@@ -16,13 +16,9 @@ export default function PopUp({
 }: {
   isLight: boolean;
   register: UseFormRegister<{
-    items?:
-      | {
-          quantity: number;
-          price: number;
-          itemName: string;
-        }[]
-      | undefined;
+    itemName: string;
+    quantity: number;
+    price: number;
     name: string;
     email: string;
     fromStreet: string;
@@ -59,7 +55,11 @@ export default function PopUp({
         price: `${invoice.price}`,
         total: `${invoice.price * invoice.quantity}`,
       };
-      setItems((prev) => [...prev, newItem]);
+      setItems((prev) =>
+        prev.some((item) => item.name === newItem.name)
+          ? prev
+          : [...prev, newItem]
+      );
     }
   }, [invoice]);
 
@@ -80,8 +80,11 @@ export default function PopUp({
       <h3 className="text-[#777F98] mt-[70px] mb-[15px] tablet:mb-[14px]">
         Item List
       </h3>
+
       {items.length == 0 && (
         <p className="text-red-500">items must not be empty</p>
+
+     
       )}
       {showNewItem && (
         <div className="flex flex-col tablet:flex-row mb-[48px]">
@@ -89,9 +92,11 @@ export default function PopUp({
             <label className="text-blueGray text-[13px]">Item Name</label>
             <label className="text-blueGray text-[13px]">Item Name</label>
             <input
+
               className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
               type="text"
               {...register(`items.${items.length}.itemName`)}
+
               value={newItem.name}
               onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
             />
@@ -101,9 +106,12 @@ export default function PopUp({
               <div>
                 <label className="text-blueGray text-[13px]">Qty.</label>
                 <input
+
                   className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                   type="number"
                   {...register(`items.${items.length}.quantity`)}
+
+
                   value={newItem.quantity}
                   onChange={(e) =>
                     setNewItem({ ...newItem, quantity: e.target.value })
@@ -114,9 +122,11 @@ export default function PopUp({
               <div>
                 <label className="text-blueGray text-[13px]">Price</label>
                 <input
+
                   className={`input ${isLight ? "bg-white" : "bg-[#252945]"}`}
                   type="number"
                   {...register(`items.${items.length}.price`)}
+
                   value={newItem.price}
                   onChange={(e) =>
                     setNewItem({ ...newItem, price: e.target.value })
@@ -146,7 +156,14 @@ export default function PopUp({
                   className="input"
                   type="text"
                   value={item.name}
-                  readOnly
+                  {...register('itemName')}
+                  onChange={(e) =>
+                    setItems((prevItems) =>
+                      prevItems.map((itm, i) =>
+                        i === index ? { ...itm, name: e.target.value } : itm
+                      )
+                    )
+                  }
                 />
               </div>
               <div className="flex w-full justify-between">
@@ -157,7 +174,16 @@ export default function PopUp({
                       className="input"
                       type="number"
                       value={item.quantity}
-                      readOnly
+                      {...register('quantity')}
+                      onChange={(e) =>
+                        setItems((prevItems) =>
+                          prevItems.map((itm, i) =>
+                            i === index
+                              ? { ...itm, quantity: e.target.value }
+                              : itm
+                          )
+                        )
+                      }
                     />
                   </div>
 
@@ -167,17 +193,32 @@ export default function PopUp({
                       className="input"
                       type="number"
                       value={item.price}
-                      readOnly
+                      {...register('price')}
+                      onChange={(e) =>
+                        setItems((prevItems) =>
+                          prevItems.map((itm, i) =>
+                            i === index
+                              ? { ...itm, price: e.target.value }
+                              : itm
+                          )
+                        )
+                      }
                     />
                   </div>
-                  <div className="flex flex-col items-center">
-                    <p className="text-blueGray text-[13px]">Total</p>
-                    <p className="mt-[27px] text-darkGray">{item.total}</p>
+
+
+                  <div className='flex flex-col items-center'>
+                    <p className='text-blueGray text-[13px]'>Total</p>
+                    <p className='mt-[27px] text-darkGray'>
+                      {(+item.quantity * +item.price).toString()}
+                    </p>
+
                   </div>
                 </div>
               </div>
             </div>
           ))}
+
 
         <button
           type="button"
@@ -188,7 +229,15 @@ export default function PopUp({
         >
           {showNewItem ? "Add Item" : "+ Add New Item"}
         </button>
+
       </div>
+      <button
+        type='button'
+        onClick={handleButtonClick}
+        className='w-full bg-[#DFE3FA] h-[48px] rounded-3xl text-blueGray'
+      >
+        {showNewItem ? 'Add Item' : '+ Add New Item'}
+      </button>
     </>
   );
 }

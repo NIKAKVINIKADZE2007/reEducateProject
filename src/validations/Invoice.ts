@@ -7,6 +7,7 @@ export const invoiceSchema = Yup.object({
   fromCity: Yup.string().required('City is required'),
   fromPostCode: Yup.string().required('Post Code is required'),
   fromCountry: Yup.string().required('Country is required'),
+  price: Yup.number().required('price is requred'),
   name: Yup.string().required("Client's Name is required"),
   email: Yup.string()
     .email('Invalid email format')
@@ -21,19 +22,8 @@ export const invoiceSchema = Yup.object({
   invoiceDate: Yup.date().required('Invoice Date is required'),
   paymentTerms: Yup.string().required('Payment Terms are required'),
   description: Yup.string().required('Project Description is required'),
-  items: Yup.array()
-    .of(
-      Yup.object({
-        itemName: Yup.string().required('Item name is required'),
-        quantity: Yup.number()
-          .required('Quantity is required')
-          .positive('Quantity must be greater than 0'),
-        price: Yup.number()
-          .required('Price is required')
-          .positive('Price must be greater than 0'),
-      })
-    )
-    .min(1, 'At least one item must be added'),
+  itemName: Yup.string().required('Project Description is required'),
+  quantity: Yup.number().required('quantity is requred'),
 });
 
 export type InvoiceFormData = Yup.InferType<typeof invoiceSchema>;
