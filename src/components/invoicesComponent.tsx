@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import invoicesData, { Invoice } from '../../invoices/InvoiceJson';
+import { Invoice } from '../../invoices/InvoiceJson';
 import EditInvoice from './EditInvoice';
 
 const Invoices = ({
