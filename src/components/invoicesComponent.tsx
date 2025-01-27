@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import invoicesData, { Invoice } from '../../invoices/InvoiceJson';
+import { useEffect, useState } from 'react';
+import { Invoice } from '../../invoices/InvoiceJson';
 import EditInvoice from './EditInvoice';
 
 const Invoices = ({
@@ -21,6 +21,17 @@ const Invoices = ({
   const [editedInvoice, setEditedInvoice] = useState<Invoice | undefined>(
     undefined
   );
+
+  useEffect(() => {
+    if (showEditInvoice) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [showEditInvoice]);
 
   const filteredInvoices = filterStatus
     ? invoices.filter((invoice) => invoice.status === filterStatus)
@@ -59,12 +70,15 @@ const Invoices = ({
   return (
     <>
       {showEditInvoice && (
-        <EditInvoice
-          setInvoices={setInvoices}
-          setShowEditInvoice={setShowEditInvoice}
-          invoice={editedInvoice}
-          isLight={isLight}
-        />
+        <>
+          <div className='fixed top-0 left-0 h-screen w-screen bg-[rgba(0,0,0,0.49)] z-10' />
+          <EditInvoice
+            setInvoices={setInvoices}
+            setShowEditInvoice={setShowEditInvoice}
+            invoice={editedInvoice}
+            isLight={isLight}
+          />
+        </>
       )}
       <div className='max-w-[730px] mx-auto space-y-4'>
         {selectedInvoice
