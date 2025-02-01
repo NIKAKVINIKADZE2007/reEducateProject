@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Invoice } from '../../invoices/InvoiceJson';
 import EditInvoice from './EditInvoice';
+import { arrowRight } from '../assets';
 
 const Invoices = ({
   filterStatus,
@@ -332,7 +333,7 @@ const Invoices = ({
                         {invoice.status}
                       </li>
                     </ul>
-                    <img src={invoice.leftArrow} alt='arrow' />
+                    <img src={arrowRight} alt='arrow' />
                   </div>
                 </div>
               </div>

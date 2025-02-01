@@ -1,5 +1,3 @@
-import leftAroow from '../src/assets/icon-arrow-left.svg';
-
 export interface Invoice {
   id: string;
   fromStreet: string;
@@ -24,7 +22,6 @@ export interface Invoice {
   }[];
   total: number;
   status: 'Pending' | 'Paid' | 'Draft';
-  leftArrow: string;
 }
 
 const invoices: Invoice[] = [
@@ -54,7 +51,6 @@ const invoices: Invoice[] = [
     ],
     total: 400,
     status: 'Pending',
-    leftArrow: leftAroow,
   },
   {
     id: 'CD5678',
@@ -82,7 +78,6 @@ const invoices: Invoice[] = [
     ],
     status: 'Paid',
     total: 300,
-    leftArrow: leftAroow,
   },
   {
     id: 'EF9012',
@@ -110,7 +105,6 @@ const invoices: Invoice[] = [
     ],
     total: 1350,
     status: 'Draft',
-    leftArrow: leftAroow,
   },
   {
     id: 'GH3456',
@@ -138,7 +132,6 @@ const invoices: Invoice[] = [
     ],
     total: 500,
     status: 'Pending',
-    leftArrow: leftAroow,
   },
   {
     id: 'IJ7890',
@@ -166,7 +159,6 @@ const invoices: Invoice[] = [
     ],
     total: 500,
     status: 'Paid',
-    leftArrow: leftAroow,
   },
   {
     id: 'KL4321',
@@ -194,7 +186,6 @@ const invoices: Invoice[] = [
     ],
     total: 1200,
     status: 'Pending',
-    leftArrow: leftAroow,
   },
   {
     id: 'MN8765',
@@ -222,7 +213,6 @@ const invoices: Invoice[] = [
     ],
     total: 250,
     status: 'Draft',
-    leftArrow: leftAroow,
   },
   {
     id: 'OP6543',
@@ -250,7 +240,6 @@ const invoices: Invoice[] = [
     ],
     total: 700,
     status: 'Paid',
-    leftArrow: leftAroow,
   },
 ];
 
