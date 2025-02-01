@@ -12,14 +12,7 @@ export default function App() {
   const [pendingInvoicesCount, setPendingInvoicesCount] = useState<number>(0);
   const [showNewInvoice, setShowNewInvoice] = useState(false);
 
-  const fetchdata = async () => {
-    const res = await fetch('http://localhost:3000');
-    const data = await res.text();
-    console.log(data);
-  };
-
   useEffect(() => {
-    fetchdata();
     const pendingCount = invoicesData.filter(
       (invoice) => invoice.status === 'Pending'
     ).length;

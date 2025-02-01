@@ -1,78 +1,61 @@
 import { useEffect, useState } from 'react';
-import { UseFormRegister } from 'react-hook-form';
 import { Invoice } from '../../invoices/InvoiceJson';
+import { FieldErrors, useForm } from 'react-hook-form';
 
 type ItemType = {
-  name: string;
-  quantity: string;
-  price: string;
-  total: string;
+  itemName: string;
+  quantity: number;
+  price: number;
 };
 
 export default function PopUp({
   register,
   invoice,
   isLight,
+  setValue,
+  errors,
 }: {
   isLight: boolean;
-  register: UseFormRegister<{
-    itemName: string;
-    quantity: number;
-    price: number;
-    name: string;
-    email: string;
-    fromStreet: string;
-    fromCity: string;
-    fromPostCode: string;
-    fromCountry: string;
-    street: string;
-    city: string;
-    country: string;
-    postCode: string;
-    invoiceDate: Date;
-    date: number;
-    month: string;
-    year: number;
-    paymentTerms: string;
-    description: string;
-  }>;
+  errors: FieldErrors<Invoice>;
+  register: any;
   invoice?: Invoice;
+  setValue: any;
 }) {
   const [items, setItems] = useState<ItemType[]>([]);
   const [showNewItem, setShowNewItem] = useState<boolean>(false);
-  const [newItem, setNewItem] = useState<ItemType>({
-    name: '',
+  const [newItem, setNewItem] = useState({
+    itemName: '',
     quantity: '',
     price: '',
-    total: '0',
   });
 
   useEffect(() => {
     if (invoice) {
-      const newItem = {
-        name: invoice.itemName,
-        quantity: `${invoice.quantity}`,
-        price: `${invoice.price}`,
-        total: `${invoice.price * invoice.quantity}`,
-      };
-      setItems((prev) =>
-        prev.some((item) => item.name === newItem.name)
-          ? prev
-          : [...prev, newItem]
-      );
+      setItems(invoice.items);
     }
   }, [invoice]);
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     if (showNewItem) {
-      const updatedItem = {
-        ...newItem,
-        total: (+newItem.quantity * +newItem.price).toString(),
+      const updatedItem: ItemType = {
+        itemName: newItem.itemName,
+        quantity: +newItem.quantity,
+        price: +newItem.price,
       };
-      setItems((prevItems) => [...prevItems, updatedItem]);
-      setNewItem({ name: '', quantity: '', price: '', total: '0' });
+
+      await setItems((prevItems) => {
+        const newItems = [...prevItems, updatedItem];
+        setValue('items', newItems);
+        return newItems;
+      });
+
+      console.log(items);
+
+      setNewItem({ itemName: '', quantity: '', price: '' });
+      setShowNewItem(false);
+    } else {
+      setShowNewItem(true);
     }
-    setShowNewItem(!showNewItem);
   };
 
   return (
@@ -93,10 +76,16 @@ export default function PopUp({
                 isLight ? 'bg-white text-[#0C0E16]' : 'bg-[#252945] text-white'
               }`}
               type='text'
-              {...register(`name`)}
-              value={newItem.name}
-              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+              value={newItem.itemName}
+              onChange={(e) =>
+                setNewItem({ ...newItem, itemName: e.target.value })
+              }
             />
+            {errors.items?.[0]?.itemName && (
+              <p className='text-red-500'>
+                {errors.items[0].itemName?.message}
+              </p>
+            )}
           </div>
           <div className='flex w-full justify-between mt-[25px] tablet:mt-0 tablet:ml-4'>
             <div className='flex gap-4 w-full'>
@@ -109,12 +98,17 @@ export default function PopUp({
                       : 'bg-[#252945] text-white'
                   }`}
                   type='number'
-                  {...register(`quantity`)}
                   value={newItem.quantity}
                   onChange={(e) =>
                     setNewItem({ ...newItem, quantity: e.target.value })
                   }
                 />
+
+                {errors.items?.[0]?.quantity && (
+                  <p className='text-red-500'>
+                    {errors.items[0].quantity?.message}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -126,12 +120,17 @@ export default function PopUp({
                       : 'bg-[#252945] text-white'
                   }`}
                   type='number'
-                  {...register(`price`)}
                   value={newItem.price}
                   onChange={(e) =>
                     setNewItem({ ...newItem, price: e.target.value })
                   }
                 />
+
+                {errors.items?.[0]?.price && (
+                  <p className='text-red-500'>
+                    {errors.items[0].price?.message}
+                  </p>
+                )}
               </div>
               <div className='flex flex-col items-center'>
                 <p className='text-blueGray text-[13px]'>Total</p>
@@ -159,8 +158,8 @@ export default function PopUp({
                       : 'bg-[#252945] text-white'
                   }`}
                   type='text'
-                  value={item.name}
-                  {...register('itemName')}
+                  value={item.itemName}
+                  {...register(`items.${index}.itemName`)}
                   onChange={(e) =>
                     setItems((prevItems) =>
                       prevItems.map((itm, i) =>
@@ -182,12 +181,12 @@ export default function PopUp({
                       }`}
                       type='number'
                       value={item.quantity}
-                      {...register('quantity')}
+                      {...register(`items.${index}.quantity`)}
                       onChange={(e) =>
                         setItems((prevItems) =>
                           prevItems.map((itm, i) =>
                             i === index
-                              ? { ...itm, quantity: e.target.value }
+                              ? { ...itm, quantity: +e.target.value }
                               : itm
                           )
                         )
@@ -205,12 +204,12 @@ export default function PopUp({
                       }`}
                       type='number'
                       value={item.price}
-                      {...register('price')}
+                      {...register(`items.${index}.price`)}
                       onChange={(e) =>
                         setItems((prevItems) =>
                           prevItems.map((itm, i) =>
                             i === index
-                              ? { ...itm, price: e.target.value }
+                              ? { ...itm, price: +e.target.value }
                               : itm
                           )
                         )
@@ -231,6 +230,10 @@ export default function PopUp({
 
         <button
           type='button'
+          disabled={
+            (!newItem.itemName.trim() || !newItem.quantity || !newItem.price) &&
+            showNewItem
+          }
           onClick={handleButtonClick}
           className={`w-full ${
             isLight ? 'bg-white' : 'bg-[#252945]'

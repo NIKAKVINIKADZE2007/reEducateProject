@@ -155,7 +155,7 @@ const Invoices = ({
                             isLight ? 'text-black' : 'text-white'
                           }`}
                         >{`#${invoice.id}`}</h2>
-                        <p className='text-[#DFE3FA]'>{invoice.itemName}</p>
+                        <p className='text-[#DFE3FA]'>{invoice.description}</p>
                       </div>
                       <div
                         className={`flex flex-col ${
@@ -241,30 +241,33 @@ const Invoices = ({
                           </tr>
                         </thead>
                         <tbody>
-                          <tr
-                            className={`text-left font-bold text-[15px] ${
-                              isLight ? 'text-[#0C0E16]' : 'text-[#FFFFFF]'
-                            }`}
-                          >
-                            <td className='py-2'>{invoice.itemName}</td>
-                            <td
-                              className={`py-2 ${
-                                isLight ? 'text-[#7E88C3]' : 'text-[#DFE3FA]'
-                              } `}
+                          {invoice.items.map((item) => (
+                            <tr
+                              key={item.itemName}
+                              className={`text-left font-bold text-[15px] ${
+                                isLight ? 'text-[#0C0E16]' : 'text-[#FFFFFF]'
+                              }`}
                             >
-                              {invoice.quantity}
-                            </td>
-                            <td
-                              className={`py-2 ${
-                                isLight ? 'text-[#7E88C3]' : 'text-[#DFE3FA]'
-                              } `}
-                            >
-                              £{invoice.price.toFixed(2)}
-                            </td>
-                            <td className='py-2 '>
-                              £{(invoice.quantity * invoice.price).toFixed(2)}
-                            </td>
-                          </tr>
+                              <td className='py-2'>{item.itemName}</td>
+                              <td
+                                className={`py-2 ${
+                                  isLight ? 'text-[#7E88C3]' : 'text-[#DFE3FA]'
+                                } `}
+                              >
+                                {item.quantity}
+                              </td>
+                              <td
+                                className={`py-2 ${
+                                  isLight ? 'text-[#7E88C3]' : 'text-[#DFE3FA]'
+                                } `}
+                              >
+                                £{item.price.toFixed(2)}
+                              </td>
+                              <td className='py-2 '>
+                                £{(item.quantity * item.price).toFixed(2)}
+                              </td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                       <div
@@ -276,7 +279,7 @@ const Invoices = ({
                           Amount Due
                         </span>
                         <span className='ml-2 text-xl font-bold'>
-                          £{(invoice.quantity * invoice.price).toFixed(2)}
+                          £{invoice.total.toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -313,7 +316,7 @@ const Invoices = ({
                       isLight ? 'text-black' : 'text-[#FFFFFF]'
                     } `}
                   >
-                    ${(invoice.quantity * invoice.price).toFixed(2)}
+                    ${invoice.total.toFixed(2)}
                   </p>
                   <div className='flex items-center gap-5'>
                     <ul

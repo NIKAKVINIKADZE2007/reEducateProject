@@ -69,11 +69,16 @@ export default function InvoiceForm({
   const onSubmit = (data: InvoiceFormData, status: string) => {
     console.log(data, 'data');
 
+    let total = 0;
+    data.items?.map((item) => {
+      total += item.price * item.quantity;
+    });
+
     const updatedInvoice = {
       ...data,
       id: invoice?.id || `${invoices.length + 1}`,
-
       status: status as 'Pending' | 'Draft',
+      total,
       leftArrow: leftArrow,
     };
 
@@ -83,8 +88,6 @@ export default function InvoiceForm({
           item.id === invoice.id ? { ...item, ...updatedInvoice } : item
         )
       );
-    } else {
-      setInvoices((prevInvoices) => [...prevInvoices, updatedInvoice]);
     }
 
     reset();
@@ -298,19 +301,14 @@ export default function InvoiceForm({
                     ? 'bg-white text-[#0C0E16]'
                     : 'bg-[#252945] text-white'
                 }`}
+                {...register('invoiceDate')}
                 onChange={(e) => {
                   setValue(`month`, getMonthAbbreviation(e.target.value));
                   const dates = e.target.value.split('-');
                   setValue('date', Number(dates[2]));
                   setValue('year', Number(dates[0]));
-                  setValue('invoiceDate', new Date());
                 }}
                 type='date'
-                value={
-                  invoice
-                    ? `${invoice.year}-${invoice.month}-${invoice.date}`
-                    : ''
-                }
               />
               {errors.invoiceDate && (
                 <p className='text-red-500'>{errors.invoiceDate?.message}</p>
@@ -371,7 +369,13 @@ export default function InvoiceForm({
             )}
           </div>
         </div>
-        <PopUp isLight={isLight} register={register} invoice={invoice} />
+        <PopUp
+          errors={errors}
+          isLight={isLight}
+          register={register}
+          setValue={setValue}
+          invoice={invoice}
+        />
       </div>
       <div className='opacity-[0.1] w-full h-[64px]   mt-6 bg-gradient-to-r from-[#979797] to-[#979797]  bg-opacity-[0.02] tablet:hidden' />
       <div
