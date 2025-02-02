@@ -34,7 +34,6 @@ export const invoiceSchema = Yup.object({
     )
     .min(1, 'At least one item is required')
     .default([{ itemName: '', price: 0, quantity: 0 }]),
-  total: Yup.number().required(),
 });
 
 export type InvoiceFormData = Yup.InferType<typeof invoiceSchema>;

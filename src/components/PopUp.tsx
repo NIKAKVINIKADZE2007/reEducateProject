@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Invoice } from '../../invoices/InvoiceJson';
-import { FieldErrors, useForm } from 'react-hook-form';
+import { FieldErrors } from 'react-hook-form';
 
 type ItemType = {
   itemName: string;
@@ -25,8 +25,8 @@ export default function PopUp({
   const [showNewItem, setShowNewItem] = useState<boolean>(false);
   const [newItem, setNewItem] = useState({
     itemName: '',
-    quantity: '',
-    price: '',
+    quantity: 0,
+    price: 0,
   });
 
   useEffect(() => {
@@ -39,8 +39,8 @@ export default function PopUp({
     if (showNewItem) {
       const updatedItem: ItemType = {
         itemName: newItem.itemName,
-        quantity: +newItem.quantity,
-        price: +newItem.price,
+        quantity: newItem.quantity,
+        price: newItem.price,
       };
 
       await setItems((prevItems) => {
@@ -51,7 +51,7 @@ export default function PopUp({
 
       console.log(items);
 
-      setNewItem({ itemName: '', quantity: '', price: '' });
+      setNewItem({ itemName: '', quantity: 0, price: 0 });
       setShowNewItem(false);
     } else {
       setShowNewItem(true);
@@ -98,9 +98,9 @@ export default function PopUp({
                       : 'bg-[#252945] text-white'
                   }`}
                   type='number'
-                  value={newItem.quantity}
+                  value={newItem.quantity || ''}
                   onChange={(e) =>
-                    setNewItem({ ...newItem, quantity: e.target.value })
+                    setNewItem({ ...newItem, quantity: +e.target.value || 0 })
                   }
                 />
 
@@ -120,9 +120,9 @@ export default function PopUp({
                       : 'bg-[#252945] text-white'
                   }`}
                   type='number'
-                  value={newItem.price}
+                  value={newItem.price || ''}
                   onChange={(e) =>
-                    setNewItem({ ...newItem, price: e.target.value })
+                    setNewItem({ ...newItem, price: +e.target.value || 0 })
                   }
                 />
 
@@ -163,7 +163,7 @@ export default function PopUp({
                   onChange={(e) =>
                     setItems((prevItems) =>
                       prevItems.map((itm, i) =>
-                        i === index ? { ...itm, name: e.target.value } : itm
+                        i === index ? { ...itm, itemName: e.target.value } : itm
                       )
                     )
                   }
@@ -180,13 +180,13 @@ export default function PopUp({
                           : 'bg-[#252945] text-white'
                       }`}
                       type='number'
-                      value={item.quantity}
+                      value={item.quantity || ''}
                       {...register(`items.${index}.quantity`)}
                       onChange={(e) =>
                         setItems((prevItems) =>
                           prevItems.map((itm, i) =>
                             i === index
-                              ? { ...itm, quantity: +e.target.value }
+                              ? { ...itm, quantity: +e.target.value || 0 }
                               : itm
                           )
                         )
@@ -203,13 +203,13 @@ export default function PopUp({
                           : 'bg-[#252945] text-white'
                       }`}
                       type='number'
-                      value={item.price}
+                      value={item.price || ''}
                       {...register(`items.${index}.price`)}
                       onChange={(e) =>
                         setItems((prevItems) =>
                           prevItems.map((itm, i) =>
                             i === index
-                              ? { ...itm, price: +e.target.value }
+                              ? { ...itm, price: +e.target.value || 0 }
                               : itm
                           )
                         )

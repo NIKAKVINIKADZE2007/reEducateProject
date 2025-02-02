@@ -3,7 +3,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InvoiceFormData, invoiceSchema } from '../validations/Invoice';
 import PopUp from './PopUp';
 import { useState, useEffect } from 'react';
-import leftArrow from '../assets/icon-arrow-left.svg';
 import invoices, { Invoice } from '../../invoices/InvoiceJson';
 
 export default function InvoiceForm({
@@ -27,8 +26,6 @@ export default function InvoiceForm({
     resolver: yupResolver(invoiceSchema),
     defaultValues: invoice || {},
   });
-
-  console.log(invoice);
 
   const getMonthAbbreviation = (date: string): string => {
     const monthAbbreviations: string[] = [
@@ -66,7 +63,7 @@ export default function InvoiceForm({
 
   const options = ['Net 1 Day', 'Net 7 Day', 'Net 14 Day', 'Net 30 Day'];
 
-  const onSubmit = (data: InvoiceFormData, status: string) => {
+  const onSubmit = async (data: InvoiceFormData, status: string) => {
     console.log(data, 'data');
 
     let total = 0;
@@ -79,7 +76,6 @@ export default function InvoiceForm({
       id: invoice?.id || `${invoices.length + 1}`,
       status: status as 'Pending' | 'Draft',
       total,
-      leftArrow: leftArrow,
     };
 
     if (invoice) {
@@ -88,13 +84,16 @@ export default function InvoiceForm({
           item.id === invoice.id ? { ...item, ...updatedInvoice } : item
         )
       );
+      reset();
+      setShowNewInvoice(false);
+      return;
     }
+
+    setInvoices((prev) => [...prev, updatedInvoice]);
 
     reset();
     setShowNewInvoice(false);
-
-    console.log(invoice);
-    console.log(setShowNewInvoice);
+    return;
   };
 
   return (
