@@ -4,6 +4,7 @@ import { InvoiceFormData, invoiceSchema } from '../validations/Invoice';
 import PopUp from './PopUp';
 import { useState, useEffect } from 'react';
 import invoices, { Invoice } from '../../invoices/InvoiceJson';
+import axios from 'axios';
 
 export default function InvoiceForm({
   setShowNewInvoice,
@@ -26,6 +27,11 @@ export default function InvoiceForm({
     resolver: yupResolver(invoiceSchema),
     defaultValues: invoice || {},
   });
+
+  const CreateNewInvoice = async (data: Invoice) => {
+    const res = await axios.post('http://localhost:3000/invoices', data);
+    console.log(res.data);
+  };
 
   const getMonthAbbreviation = (date: string): string => {
     const monthAbbreviations: string[] = [
@@ -90,6 +96,7 @@ export default function InvoiceForm({
     }
 
     setInvoices((prev) => [...prev, updatedInvoice]);
+    CreateNewInvoice(updatedInvoice);
 
     reset();
     setShowNewInvoice(false);
