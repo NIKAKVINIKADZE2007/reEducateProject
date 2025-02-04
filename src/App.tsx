@@ -32,7 +32,7 @@ export default function App() {
 
   return (
     <div
-      className={`${
+      className={`transition-colors duration-500 ease-in-out ${
         isLight ? 'bg-white' : 'bg-[#141625]'
       } h-[140vh] items-center`}
     >
