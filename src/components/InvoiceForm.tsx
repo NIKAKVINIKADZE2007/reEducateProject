@@ -3,8 +3,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InvoiceFormData, invoiceSchema } from '../validations/Invoice';
 import PopUp from './PopUp';
 import { useState, useEffect } from 'react';
-import leftArrow from '../assets/icon-arrow-left.svg';
 import invoices, { Invoice } from '../../invoices/InvoiceJson';
+import axios from 'axios';
 
 export default function InvoiceForm({
   setShowNewInvoice,
@@ -28,7 +28,10 @@ export default function InvoiceForm({
     defaultValues: invoice || {},
   });
 
-  console.log(invoice);
+  const CreateNewInvoice = async (data: Invoice) => {
+    const res = await axios.post('http://localhost:3000/invoices', data);
+    console.log(res.data);
+  };
 
   const getMonthAbbreviation = (date: string): string => {
     const monthAbbreviations: string[] = [
@@ -66,7 +69,7 @@ export default function InvoiceForm({
 
   const options = ['Net 1 Day', 'Net 7 Day', 'Net 14 Day', 'Net 30 Day'];
 
-  const onSubmit = (data: InvoiceFormData, status: string) => {
+  const onSubmit = async (data: InvoiceFormData, status: string) => {
     console.log(data, 'data');
 
     let total = 0;
@@ -79,7 +82,6 @@ export default function InvoiceForm({
       id: invoice?.id || `${invoices.length + 1}`,
       status: status as 'Pending' | 'Draft',
       total,
-      leftArrow: leftArrow,
     };
 
     if (invoice) {
@@ -88,13 +90,17 @@ export default function InvoiceForm({
           item.id === invoice.id ? { ...item, ...updatedInvoice } : item
         )
       );
+      reset();
+      setShowNewInvoice(false);
+      return;
     }
+
+    setInvoices((prev) => [...prev, updatedInvoice]);
+    CreateNewInvoice(updatedInvoice);
 
     reset();
     setShowNewInvoice(false);
-
-    console.log(invoice);
-    console.log(setShowNewInvoice);
+    return;
   };
 
   return (
