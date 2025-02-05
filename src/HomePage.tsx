@@ -14,10 +14,8 @@ export default function HomePage() {
   const [filterStatus, setFilterStatus] = useState<string | null>(null);
   const [pendingInvoicesCount, setPendingInvoicesCount] = useState<number>(0);
   const [showNewInvoice, setShowNewInvoice] = useState(false);
-  const [loader, setLoader] = useState<boolean>(false);
 
   const getUser = async () => {
-    setLoader(true);
     const cookies = new Cookies();
     const token = cookies.get('token');
     try {
@@ -28,7 +26,6 @@ export default function HomePage() {
       });
       setInvoices(res.data.invoices);
       console.log(res.data);
-      setLoader(false);
     } catch (e) {
       router('/auth/sign-in');
     }
@@ -38,7 +35,6 @@ export default function HomePage() {
     const cookies = new Cookies();
     const token = cookies.get('token');
     try {
-      setLoader(true);
       const res = await axios.get(
         'http://localhost:3000/invoices/user-invoices',
         {
@@ -49,7 +45,6 @@ export default function HomePage() {
       );
       setInvoices(res.data);
       console.log(res.data, 'invoices');
-      setLoader(false);
     } catch (e) {
       console.log(e, 'error');
     }

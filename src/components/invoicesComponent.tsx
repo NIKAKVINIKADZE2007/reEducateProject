@@ -25,9 +25,6 @@ const Invoices = ({
     undefined
   );
 
-  const cookies = new Cookies();
-  const token = cookies.get('token');
-
   useEffect(() => {
     if (showEditInvoice) {
       document.body.style.overflow = 'hidden';
@@ -63,7 +60,7 @@ const Invoices = ({
       const cookies = new Cookies();
       const token = cookies.get('token');
 
-      // Send DELETE request to remove the invoice
+      console.log(invoiceId, 'invoiceId');
       const res = await axios.delete(
         `http://localhost:3000/invoices/${invoiceId}`,
         {
@@ -73,11 +70,11 @@ const Invoices = ({
         }
       );
 
-      // Get the deleted invoice data from the response
       const data = res.data;
       console.log(data);
 
-      // Update the state to remove the deleted invoice
+      setSelectedInvoice(null);
+
       setInvoices((prevInvoices) =>
         prevInvoices.filter((invoice) => invoice._id !== data._id)
       );

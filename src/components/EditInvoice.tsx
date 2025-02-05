@@ -25,7 +25,7 @@ export default function EditInvoice({
             isLight ? 'text-[black]' : 'text-[white]'
           }  font-bold text-[24px] tablet:mt-[59px] leading-8 mb-[22px] tablet:mb-[46px] mx-auto tablet:ml-[56px] desktop:ml-[159px] `}
         >
-          Edit #{invoice?.id}
+          Edit #{invoice?._id}
         </h1>
         <InvoiceForm
           setInvoices={setInvoices}
