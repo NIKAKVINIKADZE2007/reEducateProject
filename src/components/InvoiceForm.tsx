@@ -3,8 +3,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { InvoiceFormData, invoiceSchema } from '../validations/Invoice';
 import PopUp from './PopUp';
 import { useState, useEffect } from 'react';
-import invoices, { Invoice } from '../../invoices/InvoiceJson';
+import { Invoice } from '../../invoices/InvoiceJson';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 export default function InvoiceForm({
   setShowNewInvoice,
@@ -27,11 +28,6 @@ export default function InvoiceForm({
     resolver: yupResolver(invoiceSchema),
     defaultValues: invoice || {},
   });
-
-  const CreateNewInvoice = async (data: Invoice) => {
-    const res = await axios.post('http://localhost:3000/invoices', data);
-    console.log(res.data);
-  };
 
   const getMonthAbbreviation = (date: string): string => {
     const monthAbbreviations: string[] = [
@@ -67,6 +63,60 @@ export default function InvoiceForm({
     setIsOpen(false);
   };
 
+  const updateInvoice = async (
+    id: string,
+    FormData: InvoiceFormData,
+    status: string
+  ) => {
+    const cookies = new Cookies();
+    const token = cookies.get('token');
+
+    const total = FormData.items.reduce(
+      (acc, item) => acc + item.quantity * item.price,
+      0
+    );
+
+    console.log(id, 'id');
+    const updateInvoice = { ...FormData, status, total };
+
+    const res = await axios.patch(
+      `http://localhost:3000/invoices/${id}`,
+      updateInvoice,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    console.log(res);
+    const data = res.data;
+    setInvoices((prev) =>
+      prev.map((invoice) => (invoice._id === id ? data : invoice))
+    );
+  };
+
+  const postInvoice = async (data: InvoiceFormData, status: string) => {
+    console.log(data, 'data');
+    console.log(status, 'status');
+    const total = data.items.reduce(
+      (acc, item) => acc + item.quantity * item.price,
+      0
+    );
+    const newInvoice = { ...data, total, status };
+
+    const cookies = new Cookies();
+    const token = cookies.get('token');
+
+    const res = await axios.post('http://localhost:3000/invoices', newInvoice, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    setInvoices((prev) => [...prev, res.data]);
+  };
+
   const options = ['Net 1 Day', 'Net 7 Day', 'Net 14 Day', 'Net 30 Day'];
 
   const onSubmit = async (data: InvoiceFormData, status: string) => {
@@ -77,26 +127,14 @@ export default function InvoiceForm({
       total += item.price * item.quantity;
     });
 
-    const updatedInvoice = {
-      ...data,
-      id: invoice?.id || `${invoices.length + 1}`,
-      status: status as 'Pending' | 'Draft',
-      total,
-    };
-
     if (invoice) {
-      setInvoices((prevInvoices) =>
-        prevInvoices.map((item) =>
-          item.id === invoice.id ? { ...item, ...updatedInvoice } : item
-        )
-      );
+      await updateInvoice(invoice._id, data, status);
       reset();
       setShowNewInvoice(false);
       return;
     }
 
-    setInvoices((prev) => [...prev, updatedInvoice]);
-    CreateNewInvoice(updatedInvoice);
+    await postInvoice(data, status);
 
     reset();
     setShowNewInvoice(false);

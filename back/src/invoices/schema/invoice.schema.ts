@@ -75,6 +75,9 @@ export class Invoice {
     enum: ['Pending', 'Paid', 'Draft'],
   })
   status: string;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'user', default: [] })
+  user: mongoose.Schema.Types.ObjectId;
 }
 
 export const InvoiceSchema = SchemaFactory.createForClass(Invoice);
