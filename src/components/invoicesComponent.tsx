@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Invoice } from '../../invoices/InvoiceJson';
 import EditInvoice from './EditInvoice';
 import { arrowRight } from '../assets';
+import Cookies from 'universal-cookie';
+import axios from 'axios';
 
 const Invoices = ({
   filterStatus,
@@ -22,6 +24,9 @@ const Invoices = ({
   const [editedInvoice, setEditedInvoice] = useState<Invoice | undefined>(
     undefined
   );
+
+  const cookies = new Cookies();
+  const token = cookies.get('token');
 
   useEffect(() => {
     if (showEditInvoice) {
@@ -44,7 +49,7 @@ const Invoices = ({
 
   const handleEditClick = (id: string) => {
     setShowEditInvoice(true);
-    const invoice = invoices.find((el) => el.id == id);
+    const invoice = invoices.find((el) => el._id == id);
     if (!invoice) return console.log('not found');
     setEditedInvoice(invoice);
   };
@@ -53,19 +58,61 @@ const Invoices = ({
     setSelectedInvoice(null);
   };
 
-  const handleDelete = (invoiceId: string) => {
-    setInvoices((prevInvoices) =>
-      prevInvoices.filter((invoice) => invoice.id !== invoiceId)
-    );
-    setSelectedInvoice(null);
+  const handleDelete = async (invoiceId: string) => {
+    try {
+      const cookies = new Cookies();
+      const token = cookies.get('token');
+
+      // Send DELETE request to remove the invoice
+      const res = await axios.delete(
+        `http://localhost:3000/invoices/${invoiceId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Get the deleted invoice data from the response
+      const data = res.data;
+      console.log(data);
+
+      // Update the state to remove the deleted invoice
+      setInvoices((prevInvoices) =>
+        prevInvoices.filter((invoice) => invoice._id !== data._id)
+      );
+
+      setSelectedInvoice(null);
+    } catch (error) {
+      console.error('Error deleting invoice:', error);
+    }
   };
 
-  const handleMarkAsPaid = (invoiceId: string) => {
-    setInvoices((prevInvoices) =>
-      prevInvoices.map((invoice) =>
-        invoice.id === invoiceId ? { ...invoice, status: 'Paid' } : invoice
-      )
-    );
+  const handleMarkAsPaid = async (invoiceId: string) => {
+    try {
+      const cookies = new Cookies();
+      const token = cookies.get('token');
+
+      const res = await axios.patch(
+        `http://localhost:3000/invoices/${invoiceId}`,
+        { status: 'Paid' },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = res.data;
+
+      setInvoices((prevInvoices) =>
+        prevInvoices.map((invoice) =>
+          invoice._id === data._id ? { ...invoice, status: 'Paid' } : invoice
+        )
+      );
+    } catch (error) {
+      console.error('Error updating invoice status:', error);
+    }
   };
 
   return (
@@ -84,9 +131,9 @@ const Invoices = ({
       <div className='max-w-[730px] mx-auto space-y-4'>
         {selectedInvoice
           ? filteredInvoices
-              .filter((invoice) => invoice.id === selectedInvoice.id)
+              .filter((invoice) => invoice._id === selectedInvoice.id)
               .map((invoice) => (
-                <div key={invoice.id}>
+                <div key={invoice._id}>
                   <button
                     className={`font-bold text-[15px]  leading-[15px] ${
                       isLight ? 'text-[black]' : 'text-[white]'
@@ -126,19 +173,19 @@ const Invoices = ({
                     <div className='flex gap-[20px] items-center'>
                       <div
                         className='w-[73px] h-[48px] font-bold text-[15px] flex justify-center items-center rounded-3xl bg-[#F9FAFE] text-[#7E88C3]'
-                        onClick={() => handleEditClick(invoice.id)}
+                        onClick={() => handleEditClick(invoice._id)}
                       >
                         Edit
                       </div>
                       <div
                         className='w-[89px] h-[48px] font-bold text-[15px] flex justify-center items-center rounded-3xl bg-[#EC5757] text-white'
-                        onClick={() => handleDelete(invoice.id)}
+                        onClick={() => handleDelete(invoice._id)}
                       >
                         Delete
                       </div>
                       <div
                         className='w-[131px] h-[48px] font-bold text-[15px] flex justify-center items-center rounded-3xl bg-[#7C5DFA] text-white'
-                        onClick={() => handleMarkAsPaid(invoice.id)}
+                        onClick={() => handleMarkAsPaid(invoice._id)}
                       >
                         Mark as Paid
                       </div>
@@ -155,7 +202,7 @@ const Invoices = ({
                           className={`text-2xl font-bold ${
                             isLight ? 'text-black' : 'text-white'
                           }`}
-                        >{`#${invoice.id}`}</h2>
+                        >{`#${invoice._id}`}</h2>
                         <p className='text-[#DFE3FA]'>{invoice.description}</p>
                       </div>
                       <div
@@ -289,11 +336,11 @@ const Invoices = ({
               ))
           : filteredInvoices.map((invoice) => (
               <div
-                key={invoice.id}
+                key={invoice._id}
                 className={`cursor-pointer h-[72px] ${
                   isLight ? 'bg-white' : 'bg-[#1E2139]'
                 }  w-full p-4 flex rounded-md shadow-md justify-between items-center`}
-                onClick={() => handleInvoiceClick(invoice.id)}
+                onClick={() => handleInvoiceClick(invoice._id)}
               >
                 <div className='flex gap-[50px]'>
                   <p
@@ -302,7 +349,7 @@ const Invoices = ({
                     } `}
                   >
                     <span className='text-[#7E88C3]'>#</span>
-                    {invoice.id}
+                    {invoice._id}
                   </p>
                   <p className='text-[#888EB0] font-medium text-[13px] leading-[15px]'>
                     Due {invoice.date} {invoice.month} {invoice.year}
@@ -317,7 +364,7 @@ const Invoices = ({
                       isLight ? 'text-black' : 'text-[#FFFFFF]'
                     } `}
                   >
-                    ${invoice.total.toFixed(2)}
+                    ${invoice.total}
                   </p>
                   <div className='flex items-center gap-5'>
                     <ul

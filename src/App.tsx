@@ -1,69 +1,19 @@
-import { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Invoices from './components/invoicesComponent';
-import invoicesData from '../invoices/InvoiceJson';
-import SideBar from './components/SideBar';
-import NewInvoice from './components/NewInvoice';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './HomePage';
 
-export default function App() {
-  const [isLight, setIsLight] = useState(true);
-  const [invoices, setInvoices] = useState(invoicesData);
-  const [filterStatus, setFilterStatus] = useState<string | null>(null);
-  const [pendingInvoicesCount, setPendingInvoicesCount] = useState<number>(0);
-  const [showNewInvoice, setShowNewInvoice] = useState(false);
+import SignUp from './components/SignUp';
+import SignIn from './components/SignIn';
 
-  useEffect(() => {
-    const pendingCount = invoicesData.filter(
-      (invoice) => invoice.status === 'Pending'
-    ).length;
-    setPendingInvoicesCount(pendingCount);
-  }, []);
-
-  useEffect(() => {
-    if (showNewInvoice) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [showNewInvoice]);
-
+const App = () => {
   return (
-    <div
-      className={`${
-        isLight ? 'bg-white' : 'bg-[#141625]'
-      } h-[140vh] items-center`}
-    >
-      {showNewInvoice && (
-        <>
-          <div className='fixed top-0 left-0 h-screen w-screen bg-[rgba(0,0,0,0.49)] z-10' />
-          <NewInvoice
-            isLight={isLight}
-            setShowNewInvoice={setShowNewInvoice}
-            setInvoices={setInvoices}
-          />
-        </>
-      )}
-      <SideBar isLight={isLight} setIsLight={setIsLight} />
-      <header className='mb-16'>
-        <Header
-          isLight={isLight}
-          setFilterStatus={setFilterStatus}
-          setShowNewInvoice={setShowNewInvoice}
-          pendingInvoicesCount={pendingInvoicesCount}
-        />
-      </header>
-
-      <div className=''>
-        <Invoices
-          isLight={isLight}
-          invoices={invoices}
-          setInvoices={setInvoices}
-          filterStatus={filterStatus}
-        />
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/auth/sign-in' element={<SignIn />} />
+        <Route path='/auth/sign-up' element={<SignUp />} />
+      </Routes>
+    </Router>
   );
-}
+};
+
+export default App;
